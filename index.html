@@ -9,9 +9,27 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div>
-    <div class="photo-square">
-        <img src="images/your-photo.jpg" alt="картинка на главном экране">
-            <h3>У тебя сегодня День Рождения?</h3>
+<!-- ЭКРАН 1: Вопрос -->
+    <div id="screen-question" class="screen active">
+        <h1>У тебя сегодня день рождения?</h1>
+        <div class="buttons-container">
+            <button id="btn-yes">ДА</button>
+            <button id="btn-no">НЕТ</button>
+        </div>
+    </div>
+
+    <!-- ЭКРАН 2: Уговоры (если нажал НЕТ) -->
+    <div id="screen-persuade" class="screen">
+        <img src="" alt="sad cat" class="meme-image">
+        <p class="persuade-text">Да ладно бро ну как так то, а?<br>Нажми да</p>
+        <button id="btn-back-to-yes">ДА</button>
+    </div>
+
+    <!-- ЭКРАН 3: Форма возраста -->
+    <div id="screen-form" class="screen">
+        <img src="" alt="birthday" class="form-image">
+        <p>И сколько тебе исполняется?</p>
+        <input type="number" id="age-input" placeholder="Впиши возраст" min="0" max="1000">
+        <button id="btn-submit-age">нажми кнопку</button>
     </div>
 </body>
