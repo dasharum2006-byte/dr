@@ -1,147 +1,53 @@
-// Элементы экранов
-const screenQuestion = document.getElementById('screen-question');
-const screenPersuade = document.getElementById('screen-persuade');
-const screenForm = document.getElementById('screen-form');
-const screenCongrats = document.getElementById('screen-congrats');
+// script.js
 
-// Кнопки
-const btnYes = document.getElementById('btn-yes');
-const btnNo = document.getElementById('btn-no');
-const btnBackToYes = document.getElementById('btn-back-to-yes');
-const btnSubmitAge = document.getElementById('btn-submit-age');
+const yesBtn = document.getElementById('yes-btn');
+const noBtn = document.getElementById('no-btn');
+const catImage = document.querySelector('.wanthug');
+const title = document.querySelector('h1');
+const buttonsContainer = document.querySelector('.buttons');
+// Устанавливаем заголовок при загрузке страницы
+title.textContent = 'С 14 февраля. Обнимашки?';
+title.style.fontSize = '30px';
 
-// Поле ввода
-const ageInput = document.getElementById('age-input');
+let noClickCount = 0;
 
-// Счётчик попыток побега
-let moves = 0;
-const maxMoves = 5; // Кнопка убежит 5 раз, потом дастся
-
-// Функция переключения экранов
-function showScreen(targetScreen) {
-    document.querySelectorAll('.screen').forEach(screen => {
-        screen.classList.remove('active');
-    });
-    targetScreen.classList.add('active');
-}
-
-// Функция перемещения кнопки ДА
-function moveYesButton() {
-    if (moves >= maxMoves) return;
+// Кнопка "Нет" убегает от курсора
+noBtn.addEventListener('mouseover', () => {
+    const containerRect = document.querySelector('.container').getBoundingClientRect();
+    const btnRect = noBtn.getBoundingClientRect();
     
-    const container = document.querySelector('.buttons-container');
-    const containerRect = container.getBoundingClientRect();
-    const buttonRect = btnYes.getBoundingClientRect();
+    // Случайная позиция внутри контейнера
+    const maxX = containerRect.width - btnRect.width - 20;
+    const maxY = containerRect.height - btnRect.height - 20;
     
-    // Вычисляем доступную область
-    const maxX = containerRect.width - buttonRect.width - 10;
-    const maxY = containerRect.height - buttonRect.height - 10;
+    const randomX = Math.random() * maxX;
+    const randomY = Math.random() * maxY;
     
-    // Случайная позиция
-    const randomX = Math.floor(Math.random() * maxX) + 5;
-    const randomY = Math.floor(Math.random() * maxY) + 5;
-    const randomRotate = Math.floor(Math.random() * 20 - 10);
+    noBtn.style.position = 'absolute';
+    noBtn.style.left = randomX + 'px';
+    noBtn.style.top = randomY + 'px';
+});
+  // Меняем заголовок
+    title.textContent = 'Как так то? Нажми  да';
+    title.style.fontSize = '30px';
+    noBtn.addEventListener('click', ()=> {
+        catImage.src = 'images/Cat.gif';
     
-    btnYes.style.left = `${randomX}px`;
-    btnYes.style.top = `${randomY}px`;
-    btnYes.style.transform = `rotate(${randomRotate}deg)`;
-    
-    moves++;
-    
-    // Меняем текст кнопки
-    const texts = ["Не поймаешь!", "Я тут!", "Попробуй ещё!", "Ха-ха!", "Ладно, жми!"];
-    if (moves < maxMoves) {
-        btnYes.textContent = texts[moves - 1];
-    } else {
-        btnYes.textContent = "ДА (наконец-то)";
-    }
-}
-
-// Событие наведения на кнопку ДА (для ПК)
-btnYes.addEventListener('mouseenter', moveYesButton);
-
-// Событие касания (для телефонов)
-btnYes.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    moveYesButton();
 });
 
-// Клик по кнопке ДА
-btnYes.addEventListener('click', () => {
-    if (moves < maxMoves) {
-        moveYesButton();
-    } else {
-        // Переход к форме возраста
-        showScreen(screenForm);
-        ageInput.focus();
-    }
-});
-
-// Клик по кнопке НЕТ
-btnNo.addEventListener('click', () => {
-    // Переход на экран уговоров
-    showScreen(screenPersuade);
-});
-
-// Кнопка "ДА (ладно уж)" на экране уговоров
-btnBackToYes.addEventListener('click', () => {
-    // Возврат к вопросу
-    moves = 0;
-    btnYes.textContent = "ДА";
-    btnYes.style.left = "50%";
-    btnYes.style.top = "5px";
-    btnYes.style.transform = "translateX(-50%)";
-    showScreen(screenQuestion);
-});
-
-// Отправка возраста
-btnSubmitAge.addEventListener('click', () => {
-    const age = ageInput.value.trim();
+// При нажатии на "Да"
+yesBtn.addEventListener('click', () => {
+    // Убираем кнопки
+    buttonsContainer.style.display = 'none';
     
-    if (!age || age < 1 || age > 120) {
-        alert("Пожалуйста, введи корректный возраст (1-120)");
-        return;
-    }
+    // Меняем заголовок
+    title.textContent = 'Я знала, что ты согласишься 😊';
+    title.style.fontSize = '30px';
     
-    // Показываем поздравление
-    document.getElementById('congrats-text').innerHTML = `
-        Тебе исполнилось <strong>${age}</strong> лет! 🎂<br><br>
-        Пусть этот год будет полон счастья, любви и невероятных приключений!<br>
-        Ты заслуживаешь всего самого лучшего! 💖✨
-    `;
-    
-    showScreen(screenCongrats);
-    startConfetti();
-});
+    // Меняем картинку на другую 
+    catImage.src = 'images/hug.gif';
 
-// Отправка по Enter в поле ввода
-ageInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        btnSubmitAge.click();
-    }
-});
-
-// Функция конфетти
-function startConfetti() {
-    const duration = 2500;
-    const end = Date.now() + duration;
     
-    (function frame() {
-        confetti({
-            particleCount: 4,
-            angle: 60,
-            spread: 55,
-            origin: { x: 0 }
-        });
-        confetti({
-            particleCount: 4,
-            angle: 120,
-            spread: 55,
-            origin: { x: 1 }
-        });
-        
-        if (Date.now() < end) {
-            requestAnimationFrame(frame);
-        }
-    }());
-}
+    // Добавляем эффект конфетти (опционально)
+    document.body.style.background = 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #ff9a9e 100%)';
+});

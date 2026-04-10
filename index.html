@@ -1,41 +1,20 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Фавикон -->
-  <link rel="icon" type="favicon.ico" href="favicon.ico">
-  <!-- Или для PNG: -->
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-  
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-<!-- ЭКРАН 1: Вопрос -->
-    <div id="screen-question" class="screen active">
-        <h1>У тебя сегодня день рождения?</h1>
-        <div class="buttons-container">
-            <button id="btn-yes">ДА</button>
-            <button id="btn-no">НЕТ</button>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Валентинка</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div class="container">
+            <img src="images/wanthug.gif" alt="Kitten" class="wanthug">
+            <h1></h1>
+            <div class = "buttons">
+                <button id="yes-btn">Да</button>
+                <button id="no-btn">Нет</button>
+            </div>
         </div>
-    </div>
-
-    <!-- ЭКРАН 2: Уговоры (если нажал НЕТ) -->
-    <div id="screen-persuade" class="screen">
-        <img src="" alt="sad cat" class="meme-image">
-        <p class="persuade-text">Да ладно бро ну как так то, а?<br>Нажми да</p>
-        <button id="btn-back-to-yes">ДА</button>
-    </div>
-
-    <!-- ЭКРАН 3: Форма возраста -->
-    <div id="screen-form" class="screen">
-        <img src="" alt="birthday" class="form-image">
-        <p>И сколько тебе исполняется?</p>
-        <input type="number" id="age-input" placeholder="Впиши возраст" min="0" max="1000">
-        <button id="btn-submit-age">нажми кнопку</button>
-    </div>
-
-     <script src="script.js"></script>
-
-</body>
+        <script src="script.js"></script>
+    </body>
 </html>
