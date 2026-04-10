@@ -6,8 +6,9 @@ const catImage = document.querySelector('.wanthug');
 const title = document.querySelector('h1');
 const buttonsContainer = document.querySelector('.buttons');
 // Устанавливаем заголовок при загрузке страницы
-title.textContent = 'С 14 февраля. Обнимашки?';
+title.textContent = 'У тебя сегодня День Рождения?';
 title.style.fontSize = '30px';
+catImage.src = 'images/CatDancing.gif';
 
 let noClickCount = 0;
 
@@ -28,10 +29,10 @@ noBtn.addEventListener('mouseover', () => {
     noBtn.style.top = randomY + 'px';
 });
   // Меняем заголовок
-    title.textContent = 'Как так то? Нажми  да';
+    title.textContent = 'Ответ неправильный';
     title.style.fontSize = '30px';
     noBtn.addEventListener('click', ()=> {
-        catImage.src = 'images/Cat.gif';
+        catImage.src = 'images/CatDancing.gif';
     
 });
 
@@ -41,11 +42,11 @@ yesBtn.addEventListener('click', () => {
     buttonsContainer.style.display = 'none';
     
     // Меняем заголовок
-    title.textContent = 'Я знала, что ты согласишься 😊';
+    title.textContent = 'Да ладно, ничесе 😮';
     title.style.fontSize = '30px';
     
     // Меняем картинку на другую 
-    catImage.src = 'images/hug.gif';
+    catImage.src = 'images/Rabbit.gif';
 
     
     // Добавляем эффект конфетти (опционально)
