@@ -10,172 +10,159 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #fce4ec7e, #f3e5f561, #e8eaf679);
-    overflow: hidden;
+    /* Нежно розово-голубой градиент */
+    background: linear-gradient(135deg, #ffd1dc 0%, #b5d8ff 50%, #ffd1dc 100%);
     padding: 20px;
 }
 
-.screen {
-    display: none;
+.container {
+    /* Белый квадратик в центре */
+    background: white;
+    border-radius: 30px;
+    padding: 3rem 2rem;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
+    
+    /* Центрируем содержимое */
+    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    background: white;
-    padding: 2.5rem;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    max-width: 450px;
+    
+    /* Анимация появления */
+    animation: fadeIn 0.8s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Картинка в белом квадратике */
+.wanthug {
     width: 100%;
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.5s ease;
+    max-width: 300px;
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
-.screen.active {
-    display: flex;
-    opacity: 1;
-    transform: translateY(0);
-}
-
+/* Текст под картинкой */
 h1 {
     color: #d81b60;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
     font-size: 1.8rem;
+    font-weight: 600;
+    line-height: 1.4;
 }
 
-h2 {
-    color: #d81b60;
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
-}
-
-p {
-    color: #555;
-    line-height: 1.6;
-    margin-bottom: 1rem;
-    font-size: 1.05rem;
-}
-
-/* Картинки */
-.meme-image,
-.form-image {
-    width: 100%;
-    max-width: 280px;
-    border-radius: 12px;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.persuade-text {
-    font-size: 1.2rem;
-    color: #d81b60;
-    font-weight: bold;
-    margin-bottom: 1.5rem;
-}
-
-/* Кнопки */
-.buttons-container {
+/* Контейнер для кнопок */
+.buttons {
     position: relative;
     width: 100%;
     min-height: 80px;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 20px;
 }
 
+/* Стили для кнопок */
 button {
-    padding: 12px 28px;
-    font-size: 1.1rem;
+    padding: 14px 32px;
+    font-size: 1.2rem;
     border: none;
-    border-radius: 12px;
+    border-radius: 50px;
     cursor: pointer;
     font-weight: bold;
-    transition: transform 0.1s ease, background 0.3s;
+    transition: all 0.2s ease;
     user-select: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 button:active {
     transform: scale(0.95);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-#btn-yes {
-    background: #4c54af;
+/* Кнопка "Да" */
+#yes-btn {
+    background: linear-gradient(135deg, #4caf50, #45a049);
     color: white;
-    position: absolute;
-    top: 5px;
-    left: 50%;
-    transform: translateX(-50%);
     transition: all 0.2s ease-out;
 }
 
-#btn-no {
-    background: #f44336;
+#yes-btn:hover {
+    background: linear-gradient(135deg, #45a049, #3d8b40);
+    box-shadow: 0 6px 16px rgba(76, 175, 80, 0.3);
+}
+
+/* Кнопка "Нет" */
+#no-btn {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a52);
     color: white;
+    position: relative;
 }
 
-#btn-no:hover {
-    background: #d32f2f;
+#no-btn:hover {
+    background: linear-gradient(135deg, #ee5a52, #d94a42);
+    box-shadow: 0 6px 16px rgba(255, 107, 107, 0.3);
 }
 
-#btn-back-to-yes {
-    background: #4c57af;
-    color: white;
-    margin-top: 1rem;
-}
-
-#btn-back-to-yes:hover {
-    background: #4375a0;
-}
-
-#btn-submit-age {
-    background: #d81b60;
-    color: white;
-    width: 100%;
-    margin-top: 12px;
-}
-
-#btn-submit-age:hover {
-    background: #c2185b;
-}
-
-/* Поле ввода */
-input {
-    width: 100%;
-    padding: 14px;
-    margin: 8px 0 12px;
-    border: 2px solid #eee;
-    border-radius: 10px;
-    font-size: 1rem;
-    outline: none;
-    transition: border-color 0.3s;
-    text-align: center;
-}
-
-input:focus {
-    border-color: #d81b73;
-}
-
-.emoji {
-    font-size: 2.5rem;
-    margin: 1.5rem 0;
-    letter-spacing: 8px;
-}
-
-/* Адаптив для телефонов */
-@media (max-width: 480px) {
-    .screen {
-        padding: 1.8rem;
+/* Адаптив для мобильных устройств */
+@media (max-width: 600px) {
+    body {
+        padding: 15px;
+    }
+    
+    .container {
+        padding: 2rem 1.5rem;
+        border-radius: 25px;
+    }
+    
+    .wanthug {
+        max-width: 250px;
     }
     
     h1 {
         font-size: 1.5rem;
+        margin-bottom: 1.5rem;
     }
     
     button {
-        padding: 10px 22px;
+        padding: 12px 24px;
+        font-size: 1.1rem;
+    }
+    
+    .buttons {
+        gap: 15px;
+    }
+}
+
+@media (max-width: 400px) {
+    .container {
+        padding: 1.5rem 1rem;
+    }
+    
+    .wanthug {
+        max-width: 200px;
+    }
+    
+    h1 {
+        font-size: 1.3rem;
+    }
+    
+    button {
+        padding: 10px 20px;
         font-size: 1rem;
     }
 }

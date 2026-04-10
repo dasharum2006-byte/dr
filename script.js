@@ -9,22 +9,26 @@ title.textContent = 'У тебя сегодня День Рождения?';
 title.style.fontSize = '30px';
 catImage.src = 'images/CatDancing.gif';
 
-let yesClickAttempts = 0; // Счетчик кликов по "Да" (попыток догнать)
+let yesHoverCount = 0; // Счетчик наведений на кнопку "Да"
 
-// === ИЗМЕНЕНИЕ 1: Убираем обработчик убегания у кнопки "Нет" ===
-// Оставляем только реакцию на клик по "Нет"
+// === Кнопка "Нет" — только клик, убегания нет ===
 noBtn.addEventListener('click', () => {
     title.textContent = 'Ответ неправильный';
     title.style.fontSize = '30px';
     catImage.src = 'images/CatDancing.gif';
 });
 
-// === ИЗМЕНЕНИЕ 2: Теперь убегает кнопка "Да" ===
+// === Кнопка "Да" убегает при наведении ===
 yesBtn.addEventListener('mouseover', () => {
-    // Если попыток уже 10 или больше, кнопка больше не двигается
-    if (yesClickAttempts >= 10) {
-        return; // Просто выходим из функции, позиция не меняется
+    // Если уже было 10 наведений или больше, кнопка не двигается
+    if (yesHoverCount >= 10) {
+        return; // Выходим, позиция не меняется
     }
+
+    // Увеличиваем счетчик наведений
+    yesHoverCount++;
+    
+    console.log(`Наведение на "Да" №${yesHoverCount}`); // Для отладки
 
     const containerRect = document.querySelector('.container').getBoundingClientRect();
     const btnRect = yesBtn.getBoundingClientRect();
@@ -38,24 +42,13 @@ yesBtn.addEventListener('mouseover', () => {
     yesBtn.style.position = 'absolute';
     yesBtn.style.left = randomX + 'px';
     yesBtn.style.top = randomY + 'px';
+    
+    // Убираем трансформацию, которая может мешать позиционированию
+    yesBtn.style.transform = 'none';
 });
 
-// === ИЗМЕНЕНИЕ 3: Увеличиваем счетчик при клике на "Да" ===
-yesBtn.addEventListener('click', (event) => {
-    // Увеличиваем счетчик попыток
-    yesClickAttempts++;
-
-    // Если попыток меньше 10, значит он еще убегает и нажатие было случайным/ловким.
-    // Но мы не хотим, чтобы срабатывал основной сценарий (смена фона и картинки) раньше времени.
-    // Поэтому блокируем выполнение поздравления, пока не наберется 10 кликов.
-    if (yesClickAttempts < 10) {
-        title.textContent = `Почти поймал! (${yesClickAttempts}/10)`;
-        title.style.fontSize = '30px';
-        catImage.src = 'images/CatDancing.gif';
-        return; // Прерываем выполнение, не даем показать финальную сцену
-    }
-
-    // Если мы здесь, значит попыток >= 10. Показываем финальное поздравление.
+// === При клике на "Да" — показываем поздравление ===
+yesBtn.addEventListener('click', () => {
     buttonsContainer.style.display = 'none';
     title.textContent = 'Да ладно, ничесе 😮';
     title.style.fontSize = '30px';
