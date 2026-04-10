@@ -1,10 +1,9 @@
-// script.js
-
 const yesBtn = document.getElementById('yes-btn');
 const noBtn = document.getElementById('no-btn');
 const catImage = document.querySelector('.wanthug');
 const title = document.querySelector('h1');
 const buttonsContainer = document.querySelector('.buttons');
+
 // Устанавливаем заголовок при загрузке страницы
 title.textContent = 'У тебя сегодня День Рождения?';
 title.style.fontSize = '30px';
@@ -17,7 +16,6 @@ noBtn.addEventListener('mouseover', () => {
     const containerRect = document.querySelector('.container').getBoundingClientRect();
     const btnRect = noBtn.getBoundingClientRect();
     
-    // Случайная позиция внутри контейнера
     const maxX = containerRect.width - btnRect.width - 20;
     const maxY = containerRect.height - btnRect.height - 20;
     
@@ -28,27 +26,19 @@ noBtn.addEventListener('mouseover', () => {
     noBtn.style.left = randomX + 'px';
     noBtn.style.top = randomY + 'px';
 });
-  // Меняем заголовок
+
+// Исправлено: всё что должно происходить при клике на "Нет" - внутри обработчика
+noBtn.addEventListener('click', () => {
     title.textContent = 'Ответ неправильный';
     title.style.fontSize = '30px';
-    noBtn.addEventListener('click', ()=> {
-        catImage.src = 'images/CatDancing.gif';
-    
+    catImage.src = 'images/CatDancing.gif';
 });
 
 // При нажатии на "Да"
 yesBtn.addEventListener('click', () => {
-    // Убираем кнопки
     buttonsContainer.style.display = 'none';
-    
-    // Меняем заголовок
     title.textContent = 'Да ладно, ничесе 😮';
     title.style.fontSize = '30px';
-    
-    // Меняем картинку на другую 
     catImage.src = 'images/Rabbit.gif';
-
-    
-    // Добавляем эффект конфетти (опционально)
     document.body.style.background = 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #ff9a9e 100%)';
 });
