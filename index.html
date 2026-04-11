@@ -8,32 +8,29 @@
 </head>
 <body>
     <div class="container">
-        <img src="images/CatDancing.gif" alt="Kitten" class="wanthug">
-        <h1></h1>
+        <img src="images/CatDancing.gif" alt="Cat" class="wanthug">
+        <h1 id="title">У тебя сегодня День Рождения?</h1>
         
-        <div class="buttons">
-            <!-- ✅ Исправлено: id соответствует тексту кнопки -->
-            <button id="no-btn">Нет</button>
-            <button id="yes-btn">Да</button>
+        <div class="buttons" id="buttons">
+            <button id="no-btn" class="btn-no">Нет</button>
+            <button id="yes-btn" class="btn-yes">Да</button>
         </div>
 
-        <!-- Кнопка "Далее" (скрыта) -->
         <div id="next-stage" class="hidden">
-            <button id="next-btn" class="next-btn">Далее </button>
+            <button id="next-btn" class="btn-next">Далее</button>
         </div>
 
-        <!-- Колесо (скрыто) -->
         <div id="wheel-container" class="hidden">
             <div class="wheel-wrapper">
                 <div class="arrow">▼</div>
                 <div class="wheel" id="wheel">
-                    <div class="sector" style="--i:0"><span>1</span></div>
-                    <div class="sector" style="--i:1"><span>2</span></div>
-                    <div class="sector" style="--i:2"><span>3</span></div>
-                    <div class="sector" style="--i:3"><span>4</span></div>
+                    <div class="sector sector-1"><span>1</span></div>
+                    <div class="sector sector-2"><span>2</span></div>
+                    <div class="sector sector-3"><span>3</span></div>
+                    <div class="sector sector-4"><span>4</span></div>
                 </div>
             </div>
-            <button id="spin-btn" class="spin-btn">Крутить! 🎡</button>
+            <button id="spin-btn" class="btn-spin">Крути</button>
             <div id="result" class="result"></div>
         </div>
     </div>
