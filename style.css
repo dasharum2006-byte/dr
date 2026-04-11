@@ -1,7 +1,11 @@
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
 body {
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     height: 100vh;
     width: 100vw;
     overflow: hidden;
@@ -22,93 +26,304 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     text-align: center;
-    overflow: hidden; /* Важно! */
-    position: relative; /* Чтобы кнопки не улетали за пределы */
+    position: relative;
+    overflow: visible;
 }
 
+/* Картинка */
 .wanthug {
     width: 100%;
-    max-width: 250px;
+    max-width: 280px;
     border-radius: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    object-fit: cover;
 }
 
+/* Заголовок */
 h1 {
     color: #d81b60;
-    margin-bottom: 30px;
-    font-size: 1.6rem;
+    margin-bottom: 40px;
+    font-size: 1.8rem;
+    font-weight: 600;
+    line-height: 1.4;
+    min-height: 60px;
 }
 
-/* Контейнер для кнопок "Да" и "Нет" */
+/* Контейнер для кнопок НЕТ и ДА */
 .buttons-wrapper {
     position: relative;
     width: 100%;
-    height: 80px; /* Фиксируем высоту, чтобы не прыгало */
+    height: 100px;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 20px;
+    margin: 20px 0;
 }
 
-.btn-no, .btn-yes {
-    padding: 14px 35px;
-    font-size: 1.1rem;
+/* Общие стили для кнопок */
+.btn-no,
+.btn-yes,
+.btn-next,
+.btn-spin,
+.btn-return {
+    padding: 16px 40px;
+    font-size: 1.2rem;
     border: none;
     border-radius: 50px;
     cursor: pointer;
     font-weight: bold;
     color: white;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    transition: transform 0.2s;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+    position: relative;
+    z-index: 100;
+}
+
+.btn-no:hover,
+.btn-yes:hover,
+.btn-next:hover,
+.btn-spin:hover {
+    transform: scale(1.05);
+}
+
+/* Кнопка НЕТ - розовая */
+.btn-no {
+    background: linear-gradient(135deg, #ff6bb8, #ee52cf);
+    order: 1;
+}
+
+/* Кнопка ДА - зелёная */
+.btn-yes {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    order: 2;
+}
+
+/* Кнопка ДАЛЕЕ */
+.btn-next {
+    background: linear-gradient(135deg, #6a82fb, #fc5c7d);
+    margin-top: 20px;
+}
+
+/* === КОЛЕСО === */
+.wheel-wrapper {
+    position: relative;
+    width: 280px;
+    height: 280px;
+    margin: 20px auto;
+}
+
+.arrow {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2.5rem;
+    color: #d81b60;
+    z-index: 10;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.wheel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    border: 5px solid #fff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+}
+
+/* Сектора колеса */
+.sector {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    transform-origin: bottom right;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sector span {
+    position: absolute;
+    font-weight: bold;
+    font-size: 1.8rem;
+    color: #333;
+    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.9);
+}
+
+/* Сектор 1 - розовый */
+.sector-1 {
+    background: #ffb6c1;
+    transform: rotate(0deg);
+}
+.sector-1 span {
+    transform: rotate(45deg) translate(70px, -70px) rotate(-45deg);
+}
+
+/* Сектор 2 - голубой */
+.sector-2 {
+    background: #add8e6;
+    transform: rotate(90deg);
+}
+.sector-2 span {
+    transform: rotate(135deg) translate(70px, -70px) rotate(-135deg);
+}
+
+/* Сектор 3 - зелёный */
+.sector-3 {
+    background: #98fb98;
+    transform: rotate(180deg);
+}
+.sector-3 span {
+    transform: rotate(225deg) translate(70px, -70px) rotate(-225deg);
+}
+
+/* Сектор 4 - фиолетовый */
+.sector-4 {
+    background: #dda0dd;
+    transform: rotate(270deg);
+}
+.sector-4 span {
+    transform: rotate(315deg) translate(70px, -70px) rotate(-315deg);
+}
+
+/* Кнопка КРУТИТЬ */
+.btn-spin {
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    margin: 20px 0;
+}
+
+.btn-spin:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Результат */
+.result {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #d81b60;
+    margin-top: 15px;
+    min-height: 40px;
+}
+
+/* === ЭКРАН ПОЗДРАВЛЕНИЯ === */
+.congrats-img {
+    width: 100%;
+    max-width: 280px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+#congrats-text {
+    color: #d81b60;
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+/* Кнопка ВЕРНУТЬСЯ */
+.btn-return {
+    background: linear-gradient(135deg, #a8edea, #fed6e3);
+    color: #333;
+    border: 2px solid #d81b60;
+    padding: 14px 30px;
+}
+
+.btn-return:hover {
+    transform: scale(1.05);
+}
+
+
+
+/* 3D сцена */
+#cake-scene {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 20px;
+}
+
+#counter {
+    background: rgba(255,255,255,0.9);
+    padding: 12px 24px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    color: #d81b60;
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 10px;
     z-index: 10;
 }
 
-.btn-no { background: linear-gradient(135deg, #ff6bb8, #ee52cf); }
-.btn-yes { background: linear-gradient(135deg, #4CAF50, #45a049); }
+.hint {
+    background: rgba(255,255,255,0.8);
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    color: #777;
+    z-index: 10;
+}
 
-.btn-next, .btn-spin {
-    padding: 14px 35px;
-    font-size: 1.1rem;
+/* Экран победы */
+#win-screen {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, #fce4ec, #f3e5f5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    animation: fadeIn 0.5s ease;
+}
+
+#win-screen.hidden { display: none; }
+
+#win-screen img {
+    max-width: 300px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    margin-bottom: 20px;
+}
+
+#win-screen h1 {
+    color: #d81b60;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+#win-screen p {
+    color: #555;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+#win-screen button {
+    padding: 14px 32px;
+    background: #d81b60;
+    color: white;
     border: none;
-    border-radius: 50px;
+    border-radius: 12px;
+    font-size: 1.1rem;
     cursor: pointer;
     font-weight: bold;
-    color: white;
-    margin-top: 20px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
-.btn-next { background: linear-gradient(135deg, #6a82fb, #fc5c7d); }
-.btn-spin { background: linear-gradient(135deg, #11998e, #38ef7d); }
 
-.wheel-wrapper {
-    position: relative;
-    width: 260px;
-    height: 260px;
-    margin: 20px auto;
-}
-.arrow {
-    position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
-    font-size: 2.5rem; color: #d81b60; z-index: 10;
-}
-.wheel {
-    width: 100%; height: 100%; border-radius: 50%;
-    border: 5px solid #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
-    position: relative; overflow: hidden;
-}
-.sector { position: absolute; width: 50%; height: 50%; transform-origin: bottom right; }
-.sector span { position: absolute; font-weight: bold; font-size: 1.5rem; color: #333; }
+#win-screen button:hover { background: #c2185b; }
 
-.sector-1 { background: #ffb6c1; transform: rotate(0deg); }
-.sector-1 span { transform: rotate(45deg) translate(60px, -60px) rotate(-45deg); }
-.sector-2 { background: #add8e6; transform: rotate(90deg); }
-.sector-2 span { transform: rotate(135deg) translate(60px, -60px) rotate(-135deg); }
-.sector-3 { background: #98fb98; transform: rotate(180deg); }
-.sector-3 span { transform: rotate(225deg) translate(60px, -60px) rotate(-225deg); }
-.sector-4 { background: #dda0dd; transform: rotate(270deg); }
-.sector-4 span { transform: rotate(315deg) translate(60px, -60px) rotate(-315deg); }
-
-.congrats-img { width: 100%; max-width: 250px; border-radius: 20px; margin-bottom: 20px; }
-#congrats-text { color: #d81b60; margin-bottom: 20px; }
-.btn-return { padding: 12px 30px; background: #eee; border: 2px solid #d81b60; border-radius: 50px; cursor: pointer; font-weight: bold; }
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
