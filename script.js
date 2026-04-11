@@ -49,7 +49,7 @@ document.getElementById('next-btn').addEventListener('click', () => {
     nextStage.style.display = 'none';
     catImage.style.display = 'none';
     wheelContainer.style.display = 'block';
-    title.textContent = 'Крути барабан! 🎡';
+    title.textContent = 'Крути барабан 🎡';
 });
 
 // === КОЛЕСО ===
@@ -63,12 +63,19 @@ let currentRotation = 0;
 
 function getRandomSector() {
     const sectors = [1, 2, 3, 4];
-    if (lastResult !== null && Math.random() < 1/3) return lastResult;
+    
+    // Если это первый запуск (lastResult === null), выбираем случайно
+    if (lastResult === null) {
+        return sectors[Math.floor(Math.random() * sectors.length)];
+    }
+    
+    // Фильтруем все сектора, КРОМЕ последнего выпавшего
     const available = sectors.filter(s => s !== lastResult);
+    
+    // Выбираем случайный из оставшихся
     return available[Math.floor(Math.random() * available.length)];
 }
 
-// === ОБРАБОТКА КЛИКА ПО КНОПКЕ "КРУТИТЬ" ===
 spinBtn.addEventListener('click', () => {
     if (isSpinning) return;
     isSpinning = true;
@@ -78,10 +85,11 @@ spinBtn.addEventListener('click', () => {
     const sector = getRandomSector();
     lastResult = sector;
 
+    // Уменьшаем разброс, чтобы колесо не попадало на границу секторов
+    const randomOffset = Math.floor(Math.random() * 30) - 15; // от -15 до +15
     const sectorAngle = 360 / 4;
     const targetAngle = (sector - 1) * sectorAngle;
     const spins = 5;
-    const randomOffset = Math.floor(Math.random() * 60) + 15;
 
     currentRotation += 360 * spins + (360 - targetAngle) + randomOffset;
     wheel.style.transform = `rotate(${currentRotation}deg)`;
@@ -91,27 +99,31 @@ spinBtn.addEventListener('click', () => {
         isSpinning = false;
         spinBtn.disabled = false;
 
-        // СЕКТОР 1: Поздравление
+        // Скрываем ВСЕ экраны перед показом нового
+        wheelContainer.style.display = 'none';
+        document.getElementById('congrats-screen').style.display = 'none';
+        document.getElementById('cake-screen').style.display = 'none';
+        document.getElementById('heart-screen').style.display = 'none';
+        document.getElementById('final-congrats-screen').style.display = 'none';
+
+        // Показываем нужный экран
         if (sector === 1) {
-            setTimeout(() => {
-                wheelContainer.style.display = 'none';
-                resultEl.textContent = '';
-                congratsScreen.style.display = 'block';
-                title.textContent = 'С Днём Рождения!';
-            }, 500);
+            document.getElementById('congrats-screen').style.display = 'block';
+            title.textContent = 'С Днём Рождения 🎂';
+        } 
+        else if (sector === 2) {
+            document.getElementById('cake-screen').style.display = 'block';
+            title.textContent = 'Съешь весь торт 🍰';
+            initCake();
+        } 
+        else if (sector === 3) {
+            document.getElementById('heart-screen').style.display = 'flex';
+            drawHeart();
+        } 
+        else if (sector === 4) {
+            document.getElementById('final-congrats-screen').style.display = 'flex';
+            if (typeof startFinalConfetti === 'function') startFinalConfetti();
         }
-        
-        // СЕКТОР 2: Торт
-        if (sector === 2) {
-            setTimeout(() => {
-                wheelContainer.style.display = 'none';
-                resultEl.textContent = '';
-                document.getElementById('cake-screen').style.display = 'block';
-                title.textContent = 'Съешь весь торт! 🎂';
-                initCake();
-            }, 500);
-        }
-        
     }, 4000);
 });
 
@@ -119,10 +131,10 @@ spinBtn.addEventListener('click', () => {
 document.getElementById('return-btn').addEventListener('click', () => {
     congratsScreen.style.display = 'none';
     wheelContainer.style.display = 'block';
-    title.textContent = 'Крути барабан! 🎡';
+    title.textContent = 'Крути барабан 🎡';
 });
 
-// ===== ФУНКЦИЯ ИНИЦИАЛИЗАЦИИ ТОРТА =====
+// ===== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ДЛЯ ТОРТА (объявляем ОДИН РАЗ) =====
 let cakeScene = null;
 let cakeCamera = null;
 let cakeRenderer = null;
@@ -134,200 +146,153 @@ let disappearingSlices = [];
 let animationId = null;
 
 function initCake() {
-    const SLICES_COUNT = 8;
-    slicesLeft = SLICES_COUNT;
+    // Сброс состояния
+    slicesLeft = 8;
     slices = [];
     disappearingSlices = [];
+    document.getElementById('counter').textContent = `Осталось кусочков: ${slicesLeft}`;
 
-    // Обновляем счётчик
-    const counter = document.getElementById('counter');
-    if (counter) counter.textContent = `Осталось кусочков: ${slicesLeft}`;
-
-    // Создаём сцену
+    // 1. Создаём сцену
     cakeScene = new THREE.Scene();
     cakeScene.background = new THREE.Color(0xfce4ec);
 
-    // Камера
+    // 2. Камера
     cakeCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
-    cakeCamera.position.set(0, 5, 8); // Чуть выше и дальше
+    cakeCamera.position.set(0, 6, 9);
     cakeCamera.lookAt(0, 0.5, 0);
 
-    // Рендерер
+    // 3. Рендерер
+    const cakeSceneEl = document.getElementById('cake-scene');
+    if (!cakeSceneEl) return;
+    
+    // Очищаем старые элементы
+    cakeSceneEl.innerHTML = '';
+    
+    // Возвращаем текст и подсказку
+    const counterEl = document.createElement('h2');
+    counterEl.id = 'counter';
+    counterEl.textContent = `Осталось кусочков: 8`;
+    cakeSceneEl.appendChild(counterEl);
+
+    const hintEl = document.createElement('p');
+    hintEl.className = 'hint';
+    hintEl.textContent = '🖱️ Крути мышкой · 🖱️ Кликай по куску торта';
+    cakeSceneEl.appendChild(hintEl);
+
     cakeRenderer = new THREE.WebGLRenderer({ antialias: true });
     cakeRenderer.setSize(window.innerWidth, window.innerHeight);
     cakeRenderer.shadowMap.enabled = true;
-    cakeRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    
-    const cakeSceneEl = document.getElementById('cake-scene');
-    if (cakeSceneEl) {
-        // Очищаем от старого canvas
-        while (cakeSceneEl.firstChild) {
-            cakeSceneEl.removeChild(cakeSceneEl.firstChild);
-        }
-        // Добавляем заголовок и подсказку обратно
-        const counterEl = document.createElement('h2');
-        counterEl.id = 'counter';
-        counterEl.textContent = `Осталось кусочков: ${slicesLeft}`;
-        cakeSceneEl.appendChild(counterEl);
-        
-        const hintEl = document.createElement('p');
-        hintEl.className = 'hint';
-        hintEl.textContent = '🖱️ Крути мышкой · 🖱️ Кликай по куску торта';
-        cakeSceneEl.appendChild(hintEl);
-        
-        cakeSceneEl.appendChild(cakeRenderer.domElement);
-    }
+    cakeSceneEl.appendChild(cakeRenderer.domElement);
 
-    // Контролы (ТОЛЬКО РУЧНОЕ ВРАЩЕНИЕ, без авто)
+    // 4. Контролы
     cakeControls = new THREE.OrbitControls(cakeCamera, cakeRenderer.domElement);
     cakeControls.enableDamping = true;
-    cakeControls.dampingFactor = 0.08;
-    cakeControls.maxPolarAngle = Math.PI / 2.1;
-    cakeControls.minDistance = 4;
-    cakeControls.maxDistance = 15;
-    cakeControls.autoRotate = false; // ✅ ОТКЛЮЧАЕМ АВТОВОЩЕНИЕ
+    cakeControls.dampingFactor = 0.05;
+    cakeControls.autoRotate = false;
     cakeControls.enablePan = false;
 
-    // Свет
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-    cakeScene.add(ambientLight);
-
+    // 5. Свет
+    cakeScene.add(new THREE.AmbientLight(0xffffff, 0.6));
     const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
     dirLight.position.set(5, 8, 5);
     dirLight.castShadow = true;
     cakeScene.add(dirLight);
 
-    const backLight = new THREE.DirectionalLight(0xffb6c1, 0.3);
-    backLight.position.set(-3, 3, -5);
-    cakeScene.add(backLight);
-
-    // Стол
-    const tableGeo = new THREE.CylinderGeometry(4, 4, 0.2, 32);
-    const tableMat = new THREE.MeshStandardMaterial({ color: 0x8B6F47 });
-    const table = new THREE.Mesh(tableGeo, tableMat);
+    // 6. Стол и Тарелка
+    const table = new THREE.Mesh(
+        new THREE.CylinderGeometry(4.5, 4.5, 0.2, 32),
+        new THREE.MeshStandardMaterial({ color: 0x8B6F47 })
+    );
     table.position.y = -0.1;
     table.receiveShadow = true;
     cakeScene.add(table);
 
-    // Тарелка
-    const plateGeo = new THREE.CylinderGeometry(3, 3, 0.08, 32);
-    const plateMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.2 });
-    const plate = new THREE.Mesh(plateGeo, plateMat);
-    plate.position.y = 0.04;
+    const plate = new THREE.Mesh(
+        new THREE.CylinderGeometry(3.2, 3.2, 0.1, 32),
+        new THREE.MeshStandardMaterial({ color: 0xffffff })
+    );
+    plate.position.y = 0.05;
     plate.receiveShadow = true;
     cakeScene.add(plate);
 
-    // Группа торта
+    // 7. ГРУППА ТОРТА
     cakeGroup = new THREE.Group();
     cakeScene.add(cakeGroup);
 
-    const sliceAngle = (Math.PI * 2) / SLICES_COUNT;
-    const cakeColor = 0xF4A460;
+    const sliceCount = 8;
+    const sliceAngle = (Math.PI * 2) / sliceCount;
+    const cakeColor = 0xFFA500;
     const creamColor = 0xFFB6C1;
-    const cherryColor = 0xDC143C;
-    const creamWhite = 0xFFF5EE;
 
-    // Создаём все куски СРАЗУ
-    for (let i = 0; i < SLICES_COUNT; i++) {
-        const startAngle = i * sliceAngle;
-        const midAngle = startAngle + sliceAngle / 2;
-
+    // === СОЗДАЁМ 8 КУСКОВ ===
+    for (let i = 0; i < sliceCount; i++) {
         const sliceGroup = new THREE.Group();
-        sliceGroup.userData = { sliceIndex: i, isSlice: true };
+        sliceGroup.userData = { isSlice: true, id: i };
+        sliceGroup.rotation.y = -i * sliceAngle;
 
-        // Бисквит
-        const spongeGeo = new THREE.CylinderGeometry(1.8, 1.8, 0.8, 32, 1, true, startAngle, sliceAngle);
-        const spongeMat = new THREE.MeshStandardMaterial({ color: cakeColor, side: THREE.DoubleSide, roughness: 0.8 });
+        // БИСКВИТ
+        const shape = new THREE.Shape();
+        shape.moveTo(0, 0);
+        shape.absarc(0, 0, 1.8, 0, sliceAngle, false);
+        shape.lineTo(0, 0);
+
+        const extrudeSettings = { depth: 0.8, bevelEnabled: false };
+        const spongeGeo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+        spongeGeo.rotateX(-Math.PI / 2);
+        
+        const spongeMat = new THREE.MeshStandardMaterial({ color: cakeColor, roughness: 0.7 });
         const sponge = new THREE.Mesh(spongeGeo, spongeMat);
         sponge.position.y = 0.5;
         sponge.castShadow = true;
+        sponge.receiveShadow = true;
         sliceGroup.add(sponge);
 
-        // Крышка
-        const topGeo = new THREE.CylinderGeometry(1.8, 1.8, 0.05, 32, 1, true, startAngle, sliceAngle);
-        const topMat = new THREE.MeshStandardMaterial({ color: 0xD2691E, side: THREE.DoubleSide });
-        const topCover = new THREE.Mesh(topGeo, topMat);
-        topCover.position.y = 0.9;
-        sliceGroup.add(topCover);
+        // КРЕМ
+        const creamShape = new THREE.Shape();
+        creamShape.moveTo(0, 0);
+        creamShape.absarc(0, 0, 1.75, 0, sliceAngle, false);
+        creamShape.lineTo(0, 0);
 
-        // Стенка
-        const innerWallGeo = new THREE.PlaneGeometry(0.8, 1.8);
-        const innerWallMat = new THREE.MeshStandardMaterial({ color: cakeColor, side: THREE.DoubleSide });
-        const innerWall = new THREE.Mesh(innerWallGeo, innerWallMat);
-        innerWall.position.set(Math.sin(midAngle) * 0.05, 0.5, Math.cos(midAngle) * 0.05);
-        innerWall.rotation.y = midAngle;
-        sliceGroup.add(innerWall);
-
-        // Крем
-        const creamGeo = new THREE.CylinderGeometry(1.75, 1.75, 0.15, 32, 1, true, startAngle + 0.02, sliceAngle - 0.04);
-        const creamMat = new THREE.MeshStandardMaterial({ color: creamColor, roughness: 0.4 });
+        const creamGeo = new THREE.ExtrudeGeometry(creamShape, { depth: 0.15, bevelEnabled: false });
+        creamGeo.rotateX(-Math.PI / 2);
+        
+        const creamMat = new THREE.MeshStandardMaterial({ color: creamColor });
         const cream = new THREE.Mesh(creamGeo, creamMat);
-        cream.position.y = 0.95;
+        cream.position.y = 1.35;
         cream.castShadow = true;
         sliceGroup.add(cream);
 
-        // Бордюр из крема
-        const borderCount = 5;
-        for (let b = 0; b < borderCount; b++) {
-            const bAngle = startAngle + (sliceAngle / (borderCount + 1)) * (b + 1);
-            const borderGeo = new THREE.SphereGeometry(0.12, 16, 16);
-            const borderMat = new THREE.MeshStandardMaterial({ color: creamWhite });
-            const borderBall = new THREE.Mesh(borderGeo, borderMat);
-            borderBall.position.set(Math.sin(bAngle) * 1.55, 1.05, Math.cos(bAngle) * 1.55);
-            sliceGroup.add(borderBall);
-        }
+        // СВЕЧКА
+        const candleGeo = new THREE.CylinderGeometry(0.05, 0.05, 0.4, 8);
+        const candleMat = new THREE.MeshStandardMaterial({ color: 0xFF69B4 });
+        const candle = new THREE.Mesh(candleGeo, candleMat);
+        
+        const midAngle = sliceAngle / 2;
+        const dist = 1.0;
+        candle.position.set(
+            Math.sin(midAngle) * dist,
+            1.65,
+            Math.cos(midAngle) * dist
+        );
+        candle.castShadow = true;
+        sliceGroup.add(candle);
 
-        // Вишенка
-        const cherryGeo = new THREE.SphereGeometry(0.15, 16, 16);
-        const cherryMat = new THREE.MeshStandardMaterial({ color: cherryColor, roughness: 0.2, metalness: 0.1 });
-        const cherry = new THREE.Mesh(cherryGeo, cherryMat);
-        cherry.position.set(Math.sin(midAngle) * 1.3, 1.15, Math.cos(midAngle) * 1.3);
-        cherry.castShadow = true;
-        sliceGroup.add(cherry);
+        // ОГОНЁК
+        const flameGeo = new THREE.SphereGeometry(0.08, 8, 8);
+        const flameMat = new THREE.MeshStandardMaterial({ color: 0xFFD700, emissive: 0xFFA500, emissiveIntensity: 0.8 });
+        const flame = new THREE.Mesh(flameGeo, flameMat);
+        flame.position.copy(candle.position);
+        flame.position.y += 0.25;
+        flame.userData.isFlame = true;
+        sliceGroup.add(flame);
 
-        // Листочек
-        const leafGeo = new THREE.SphereGeometry(0.08, 8, 8);
-        leafGeo.scale(1, 0.3, 1.5);
-        const leafMat = new THREE.MeshStandardMaterial({ color: 0x228B22 });
-        const leaf = new THREE.Mesh(leafGeo, leafMat);
-        leaf.position.set(Math.sin(midAngle) * 1.35, 1.25, Math.cos(midAngle) * 1.35);
-        leaf.rotation.y = midAngle;
-        sliceGroup.add(leaf);
-
-        // Стебелёк
-        const stemGeo = new THREE.CylinderGeometry(0.015, 0.015, 0.25, 8);
-        const stemMat = new THREE.MeshStandardMaterial({ color: 0x2E8B57 });
-        const stem = new THREE.Mesh(stemGeo, stemMat);
-        stem.position.set(Math.sin(midAngle) * 1.33, 1.32, Math.cos(midAngle) * 1.33);
-        sliceGroup.add(stem);
-
-        sliceGroup.rotation.y = -midAngle;
         slices.push(sliceGroup);
-        cakeGroup.add(sliceGroup); // ✅ ДОБАВЛЯЕМ кусок в сцену СРАЗУ
+        cakeGroup.add(sliceGroup);
     }
 
-    // Крем по бокам торта
-    for (let i = 0; i < SLICES_COUNT; i++) {
-        const angle = i * sliceAngle;
-        const dripGeo = new THREE.CylinderGeometry(0.08, 0.05, 0.3, 8);
-        const dripMat = new THREE.MeshStandardMaterial({ color: creamColor });
-        const drip = new THREE.Mesh(dripGeo, dripMat);
-        drip.position.set(Math.sin(angle) * 1.7, 0.7, Math.cos(angle) * 1.7);
-        cakeGroup.add(drip);
-    }
-
-    // Raycaster для кликов
+    // === ОБРАБОТКА КЛИКОВ ===
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
-
-    function removeSlice(sliceGroup) {
-        if (!sliceGroup.userData.isSlice || sliceGroup.userData.removing) return;
-        sliceGroup.userData.removing = true;
-        slicesLeft--;
-        const counter = document.getElementById('counter');
-        if (counter) counter.textContent = `Осталось кусочков: ${slicesLeft}`;
-        disappearingSlices.push({ group: sliceGroup, scale: 1.0 });
-    }
 
     cakeRenderer.domElement.addEventListener('click', (event) => {
         mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -345,53 +310,56 @@ function initCake() {
             while (target.parent && !target.userData.isSlice) {
                 target = target.parent;
             }
-            if (target.userData.isSlice) {
+            if (target.userData.isSlice && !target.userData.removing) {
                 removeSlice(target);
             }
         }
     });
 
-    function checkWin() {
-        if (slicesLeft <= 0) {
-            setTimeout(() => {
-                const winScreen = document.getElementById('win-screen');
-                if (winScreen) winScreen.classList.remove('hidden');
-            }, 800);
-        }
+    // === УДАЛЕНИЕ КУСКА ===
+    function removeSlice(slice) {
+        slice.userData.removing = true;
+        slicesLeft--;
+        const counter = document.getElementById('counter');
+        if (counter) counter.textContent = `Осталось кусочков: ${slicesLeft}`;
+        disappearingSlices.push({ mesh: slice, scale: 1.0 });
     }
 
-    // Анимация (БЕЗ АВТОВОЩЕНИЯ)
+    // === АНИМАЦИЯ ===
     function animate() {
         animationId = requestAnimationFrame(animate);
         cakeControls.update();
 
-        // Анимация исчезновения кусков
+        const time = Date.now() * 0.005;
+        slices.forEach(slice => {
+            const flame = slice.children.find(c => c.userData.isFlame);
+            if (flame && !slice.userData.removing) {
+                flame.scale.y = 1 + Math.sin(time * 3) * 0.2;
+                flame.scale.x = 1 + Math.cos(time * 2) * 0.1;
+            }
+        });
+
         for (let i = disappearingSlices.length - 1; i >= 0; i--) {
             const item = disappearingSlices[i];
-            item.scale -= 0.02;
-            item.group.scale.setScalar(Math.max(0, item.scale));
+            item.scale -= 0.03;
+            item.mesh.scale.setScalar(Math.max(0, item.scale));
+            
             if (item.scale <= 0) {
-                cakeGroup.remove(item.group);
+                cakeGroup.remove(item.mesh);
                 disappearingSlices.splice(i, 1);
-                checkWin();
+                
+                if (slicesLeft <= 0) {
+                    setTimeout(() => {
+                        document.getElementById('win-screen').classList.remove('hidden');
+                    }, 500);
+                }
             }
         }
 
-        // ✅ УБРАЛ: cakeGroup.rotation.y += 0.002;
-        
         cakeRenderer.render(cakeScene, cakeCamera);
     }
 
     animate();
-
-    // Resize handler
-    window.addEventListener('resize', () => {
-        if (cakeCamera && cakeRenderer) {
-            cakeCamera.aspect = window.innerWidth / window.innerHeight;
-            cakeCamera.updateProjectionMatrix();
-            cakeRenderer.setSize(window.innerWidth, window.innerHeight);
-        }
-    });
 }
 
 // === КНОПКА "ВЕРНУТЬСЯ К КОЛЕСУ" ===
@@ -401,7 +369,7 @@ if (backToWheelBtn) {
         document.getElementById('cake-screen').style.display = 'none';
         document.getElementById('win-screen').classList.add('hidden');
         wheelContainer.style.display = 'block';
-        title.textContent = 'Крути барабан! 🎡';
+        title.textContent = 'Крути барабан 🎡';
         
         // Очищаем сцену торта
         if (animationId) {
@@ -424,3 +392,160 @@ if (backToWheelBtn) {
         disappearingSlices = [];
     });
 }
+// ===== ФУНКЦИЯ РИСОВАНИЯ СЕРДЦА =====
+function drawHeart() {
+    const canvas = document.getElementById('heart-canvas');
+    const ctx = canvas.getContext('2d');
+    const title = document.getElementById('heart-title');
+    
+    // Сбрасываем размер и очищаем (чтобы не рисовалось поверх старого)
+    canvas.width = 400;
+    canvas.height = 400;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Настройки линии
+    ctx.lineWidth = 6;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = '#ff0040';
+    ctx.shadowColor = '#ff0040';
+    ctx.shadowBlur = 20;
+    
+    // Генерируем точки сердца
+    const points = [];
+    const totalPoints = 300;
+    
+    for (let i = 0; i <= totalPoints; i++) {
+        const t = (i / totalPoints) * Math.PI * 2;
+        const x = 16 * Math.pow(Math.sin(t), 3);
+        const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+        
+        // Масштабируем и центрируем под canvas 400x400
+        points.push({
+            x: x * 10 + 200,
+            y: y * 10 + 180
+        });
+    }
+    
+    let current = 0;
+    
+    function animate() {
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, points[0].y);
+        
+        for (let i = 1; i <= current; i++) {
+            ctx.lineTo(points[i].x, points[i].y);
+        }
+        ctx.stroke();
+        
+        // "Кисточка" в конце линии
+        if (current < totalPoints) {
+            ctx.beginPath();
+            ctx.arc(points[current].x, points[current].y, 7, 0, Math.PI * 2);
+            ctx.fillStyle = '#ff8fa3';
+            ctx.fill();
+        }
+        
+        current++;
+        
+        if (current <= totalPoints) {
+            requestAnimationFrame(animate);
+        } else {
+            // Когда дорисовало
+            title.textContent = "С Днём Рождения! 💖";
+        }
+    }
+    
+    animate();
+}
+
+// ===== КНОПКА "ВЕРНУТЬСЯ" ОТ СЕРДЦА =====
+const backToWheelBtnHeart = document.getElementById('back-to-wheel-from-heart');
+if (backToWheelBtnHeart) {
+    backToWheelBtnHeart.addEventListener('click', () => {
+        // Скрываем сердце
+        document.getElementById('heart-screen').style.display = 'none';
+        
+        // Показываем колесо
+        wheelContainer.style.display = 'block';
+        title.textContent = 'Крути барабан  🎡';
+    });
+}
+// ===== КОНФЕТТИ ДЛЯ СЕКТОРА 4 =====
+function startFinalConfetti() {
+    // Проверяем, подключена ли библиотека confetti
+    if (typeof confetti === 'undefined') {
+        console.log('Confetti library not loaded');
+        return;
+    }
+    
+    const duration = 5000; // 5 секунд
+    const end = Date.now() + duration;
+    
+    // Запускаем несколько источников конфетти
+    (function frame() {
+        // Левая сторона
+        confetti({
+            particleCount: 5,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0, y: 0.6 },
+            colors: ['#ff416c', '#ff4b2b', '#ff6b8a', '#ff8fa3', '#d81b60']
+        });
+        
+        // Правая сторона
+        confetti({
+            particleCount: 5,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1, y: 0.6 },
+            colors: ['#ff416c', '#ff4b2b', '#ff6b8a', '#ff8fa3', '#d81b60']
+        });
+        
+        // Середина (вверх)
+        confetti({
+            particleCount: 3,
+            angle: 90,
+            spread: 30,
+            origin: { x: 0.5, y: 0.8 },
+            colors: ['#ffd700', '#ffa500', '#ff69b4', '#ff1493']
+        });
+        
+        if (Date.now() < end) {
+            requestAnimationFrame(frame);
+        }
+    }());
+    
+    // Дополнительный залп через 2 секунды
+    setTimeout(() => {
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#ff416c', '#ff4b2b', '#ffd700', '#ff69b4']
+        });
+    }, 2000);
+}
+
+// ===== КНОПКА "ВЕРНУТЬСЯ" ОТ ФИНАЛЬНОГО ПОЗДРАВЛЕНИЯ =====
+const backToWheelFromFinal = document.getElementById('back-to-wheel-from-final');
+if (backToWheelFromFinal) {
+    backToWheelFromFinal.addEventListener('click', () => {
+        document.getElementById('final-congrats-screen').style.display = 'none';
+        wheelContainer.style.display = 'block';
+        title.textContent = 'Крути барабан  🎡';
+    });
+}
+// === КНОПКА ВОЗВРАТА (Экран 1) ===
+document.getElementById('return-btn')?.addEventListener('click', () => {
+    document.getElementById('congrats-screen').style.display = 'none';
+    wheelContainer.style.display = 'block';
+    title.textContent = 'Крути барабан 🎡';
+});
+
+// === КНОПКА ВОЗВРАТА (Экран 4) ===
+document.getElementById('back-to-wheel-from-final')?.addEventListener('click', () => {
+    document.getElementById('final-congrats-screen').style.display = 'none';
+    wheelContainer.style.display = 'block';
+    title.textContent = 'Крути барабан 🎡';
+});

@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DR</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Библиотека конфетти -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -31,13 +33,12 @@
                     <div class="sector sector-4"><span>4</span></div>
                 </div>
             </div>
-            <button id="spin-btn" class="btn-spin">Крутить! 🎡</button>
+            <button id="spin-btn" class="btn-spin">Крути</button>
             <div id="result" class="result"></div>
         </div>
 
         <div id="congrats-screen" style="display: none;">
-            <img src="images/CatDancing.gif" class="congrats-img" id="congrats-img">
-            <h2 id="congrats-text">С Днём Рождения! 🎂</h2>
+            <img src="images/Happy.gif" class="congrats-img" id="congrats-img">
             <button id="return-btn" class="btn-return">Вернуться к колесу</button>
         </div>
             <!-- === ЭКРАН С ТОРТОМ === -->
@@ -47,9 +48,8 @@
             <p class="hint">🖱️ Крути мышкой · 🖱️ Кликай по куску торта</p>
         </div>
         <div id="win-screen" class="hidden">
-            <img src="https://media.giphy.com/media/3o6ZsZdNs3yE5l6hWM/giphy.gif" alt="yummy">
-            <h1>Весь торт схавала! 😋</h1>
-            <p>Ты настоящий сладкоежка! 🍰✨</p>
+            <img src="images/Chubzik.gif" class="congrats-img" alt="yummy">
+            <h1>Весь торт схавала!😋</h1>
             <button id="back-to-wheel-btn" class="btn-return">Вернуться к колесу 🎡</button>
         </div>
     </div>
@@ -57,7 +57,41 @@
     <!-- Подключаем Three.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    
+    <!-- === ЭКРАН С СЕРДЦЕМ === -->
+<div id="heart-screen" style="display: none;">
+    <canvas id="heart-canvas"></canvas>
+    <button id="back-to-wheel-from-heart" class="btn-return">Вернуться к колесу 🎡</button>
+</div>
+<!-- === ЭКРАН С ПОЗДРАВЛЕНИЕМ (Сектор 4) === -->
+<div id="final-congrats-screen" style="display: none;">
+    <div class="congrats-card">
+        <img src="images/kittens.gif" alt="birthday celebration" class="celebration-gif">
+        
+        <h2 class="congrats-title">Настена</h2>
+        
+        <div class="wishes-text">
+            <p> <strong>С Днём Рождения!</strong> 🌸</p>
+            <br>
+            <p>Желаю тебе <span class="highlight">безграничного счастья</span></p>
+            <br>
+            <p><strong>Крепкого здоровья</strong> тебе</p>
+            <br>
+            <p>Пусть каждый день приносит  радость</span> и новые поводы для улыбки!😊</p>
+            <br>
+            <p><strong>Невероятной любви</strong>, которая окрыляет и вдохновляет!💕</p>
+            <br>
+            <p>Пусть все твои <span class="highlight">мечты сбываются</span>🌟</p>
+            <br>
+            <p><strong>Удачи</strong> во всех начинаниях и <strong>успеха</strong> в делах!</p>
+            <br>
+            <p>Оставайся такой же <span class="highlight">замечательной, доброй и прекрасной</span>,какая ты есть!</p>
+            <br>
+            <p style="font-size: 1.2rem; color: #d81b607d;"><strong>Ты заслуживаешь всего самого лучшего!</strong></p>
+        </div>
+        
+        <button id="back-to-wheel-from-final" class="btn-return">Ещё раз крути  🎡</button>
+    </div>
+</div>
     <!-- Твой скрипт -->
     <script src="script.js"></script>
 </body>
