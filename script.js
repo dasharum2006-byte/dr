@@ -12,7 +12,7 @@ let yesHoverCount = 0;
 // === КНОПКА "НЕТ" ===
 noBtn.addEventListener('click', () => {
     title.textContent = 'Ответ неправильный';
-    catImage.src = 'images/Rabbit.gif';
+    catImage.src = 'images/Dog.gif';
     setTimeout(() => {
         title.textContent = 'У тебя сегодня День Рождения?';
         catImage.src = 'images/CatDancing.gif';
@@ -110,10 +110,10 @@ spinBtn.addEventListener('click', () => {
                 title.textContent = 'Съешь весь торт! 🎂';
                 initCake();
             }, 500);
-        } // ← ✅ ЗАКРЫВАЕТ if (sector === 2)
+        }
         
-    }, 4000); // ← ✅ ЗАКРЫВАЕТ внешний setTimeout
-}); // ← ✅ ЗАКРЫВАЕТ addEventListener
+    }, 4000);
+});
 
 // === КНОПКА "ВЕРНУТЬСЯ" ===
 document.getElementById('return-btn').addEventListener('click', () => {
@@ -123,70 +123,111 @@ document.getElementById('return-btn').addEventListener('click', () => {
 });
 
 // ===== ФУНКЦИЯ ИНИЦИАЛИЗАЦИИ ТОРТА =====
+let cakeScene = null;
+let cakeCamera = null;
+let cakeRenderer = null;
+let cakeControls = null;
+let cakeGroup = null;
+let slices = [];
+let slicesLeft = 8;
+let disappearingSlices = [];
+let animationId = null;
+
 function initCake() {
     const SLICES_COUNT = 8;
-    let slicesLeft = SLICES_COUNT;
+    slicesLeft = SLICES_COUNT;
+    slices = [];
+    disappearingSlices = [];
 
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xfce4ec);
+    // Обновляем счётчик
+    const counter = document.getElementById('counter');
+    if (counter) counter.textContent = `Осталось кусочков: ${slicesLeft}`;
 
-    const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
-    camera.position.set(0, 4, 7);
+    // Создаём сцену
+    cakeScene = new THREE.Scene();
+    cakeScene.background = new THREE.Color(0xfce4ec);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    // Камера
+    cakeCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+    cakeCamera.position.set(0, 5, 8); // Чуть выше и дальше
+    cakeCamera.lookAt(0, 0.5, 0);
+
+    // Рендерер
+    cakeRenderer = new THREE.WebGLRenderer({ antialias: true });
+    cakeRenderer.setSize(window.innerWidth, window.innerHeight);
+    cakeRenderer.shadowMap.enabled = true;
+    cakeRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
     
     const cakeSceneEl = document.getElementById('cake-scene');
     if (cakeSceneEl) {
-        cakeSceneEl.appendChild(renderer.domElement);
+        // Очищаем от старого canvas
+        while (cakeSceneEl.firstChild) {
+            cakeSceneEl.removeChild(cakeSceneEl.firstChild);
+        }
+        // Добавляем заголовок и подсказку обратно
+        const counterEl = document.createElement('h2');
+        counterEl.id = 'counter';
+        counterEl.textContent = `Осталось кусочков: ${slicesLeft}`;
+        cakeSceneEl.appendChild(counterEl);
+        
+        const hintEl = document.createElement('p');
+        hintEl.className = 'hint';
+        hintEl.textContent = '🖱️ Крути мышкой · 🖱️ Кликай по куску торта';
+        cakeSceneEl.appendChild(hintEl);
+        
+        cakeSceneEl.appendChild(cakeRenderer.domElement);
     }
 
-    const controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.08;
-    controls.maxPolarAngle = Math.PI / 2.1;
-    controls.minDistance = 4;
-    controls.maxDistance = 15;
+    // Контролы (ТОЛЬКО РУЧНОЕ ВРАЩЕНИЕ, без авто)
+    cakeControls = new THREE.OrbitControls(cakeCamera, cakeRenderer.domElement);
+    cakeControls.enableDamping = true;
+    cakeControls.dampingFactor = 0.08;
+    cakeControls.maxPolarAngle = Math.PI / 2.1;
+    cakeControls.minDistance = 4;
+    cakeControls.maxDistance = 15;
+    cakeControls.autoRotate = false; // ✅ ОТКЛЮЧАЕМ АВТОВОЩЕНИЕ
+    cakeControls.enablePan = false;
 
+    // Свет
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-    scene.add(ambientLight);
+    cakeScene.add(ambientLight);
 
     const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
     dirLight.position.set(5, 8, 5);
     dirLight.castShadow = true;
-    scene.add(dirLight);
+    cakeScene.add(dirLight);
 
     const backLight = new THREE.DirectionalLight(0xffb6c1, 0.3);
     backLight.position.set(-3, 3, -5);
-    scene.add(backLight);
+    cakeScene.add(backLight);
 
+    // Стол
     const tableGeo = new THREE.CylinderGeometry(4, 4, 0.2, 32);
     const tableMat = new THREE.MeshStandardMaterial({ color: 0x8B6F47 });
     const table = new THREE.Mesh(tableGeo, tableMat);
     table.position.y = -0.1;
     table.receiveShadow = true;
-    scene.add(table);
+    cakeScene.add(table);
 
+    // Тарелка
     const plateGeo = new THREE.CylinderGeometry(3, 3, 0.08, 32);
     const plateMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.2 });
     const plate = new THREE.Mesh(plateGeo, plateMat);
     plate.position.y = 0.04;
     plate.receiveShadow = true;
-    scene.add(plate);
+    cakeScene.add(plate);
+
+    // Группа торта
+    cakeGroup = new THREE.Group();
+    cakeScene.add(cakeGroup);
 
     const sliceAngle = (Math.PI * 2) / SLICES_COUNT;
-    const slices = [];
-
     const cakeColor = 0xF4A460;
     const creamColor = 0xFFB6C1;
     const cherryColor = 0xDC143C;
     const creamWhite = 0xFFF5EE;
 
-    const cakeGroup = new THREE.Group();
-    scene.add(cakeGroup);
-
+    // Создаём все куски СРАЗУ
     for (let i = 0; i < SLICES_COUNT; i++) {
         const startAngle = i * sliceAngle;
         const midAngle = startAngle + sliceAngle / 2;
@@ -225,7 +266,7 @@ function initCake() {
         cream.castShadow = true;
         sliceGroup.add(cream);
 
-        // Бордюр
+        // Бордюр из крема
         const borderCount = 5;
         for (let b = 0; b < borderCount; b++) {
             const bAngle = startAngle + (sliceAngle / (borderCount + 1)) * (b + 1);
@@ -262,10 +303,10 @@ function initCake() {
 
         sliceGroup.rotation.y = -midAngle;
         slices.push(sliceGroup);
-        cakeGroup.add(sliceGroup);
+        cakeGroup.add(sliceGroup); // ✅ ДОБАВЛЯЕМ кусок в сцену СРАЗУ
     }
 
-    // Крем по бокам
+    // Крем по бокам торта
     for (let i = 0; i < SLICES_COUNT; i++) {
         const angle = i * sliceAngle;
         const dripGeo = new THREE.CylinderGeometry(0.08, 0.05, 0.3, 8);
@@ -275,9 +316,9 @@ function initCake() {
         cakeGroup.add(drip);
     }
 
+    // Raycaster для кликов
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
-    const disappearingSlices = [];
 
     function removeSlice(sliceGroup) {
         if (!sliceGroup.userData.isSlice || sliceGroup.userData.removing) return;
@@ -288,10 +329,10 @@ function initCake() {
         disappearingSlices.push({ group: sliceGroup, scale: 1.0 });
     }
 
-    renderer.domElement.addEventListener('click', (event) => {
+    cakeRenderer.domElement.addEventListener('click', (event) => {
         mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-        raycaster.setFromCamera(mouse, camera);
+        raycaster.setFromCamera(mouse, cakeCamera);
 
         const allMeshes = [];
         slices.forEach(s => {
@@ -319,10 +360,12 @@ function initCake() {
         }
     }
 
+    // Анимация (БЕЗ АВТОВОЩЕНИЯ)
     function animate() {
-        requestAnimationFrame(animate);
-        controls.update();
+        animationId = requestAnimationFrame(animate);
+        cakeControls.update();
 
+        // Анимация исчезновения кусков
         for (let i = disappearingSlices.length - 1; i >= 0; i--) {
             const item = disappearingSlices[i];
             item.scale -= 0.02;
@@ -334,15 +377,50 @@ function initCake() {
             }
         }
 
-        cakeGroup.rotation.y += 0.002;
-        renderer.render(scene, camera);
+        // ✅ УБРАЛ: cakeGroup.rotation.y += 0.002;
+        
+        cakeRenderer.render(cakeScene, cakeCamera);
     }
 
     animate();
 
+    // Resize handler
     window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        if (cakeCamera && cakeRenderer) {
+            cakeCamera.aspect = window.innerWidth / window.innerHeight;
+            cakeCamera.updateProjectionMatrix();
+            cakeRenderer.setSize(window.innerWidth, window.innerHeight);
+        }
+    });
+}
+
+// === КНОПКА "ВЕРНУТЬСЯ К КОЛЕСУ" ===
+const backToWheelBtn = document.getElementById('back-to-wheel-btn');
+if (backToWheelBtn) {
+    backToWheelBtn.addEventListener('click', () => {
+        document.getElementById('cake-screen').style.display = 'none';
+        document.getElementById('win-screen').classList.add('hidden');
+        wheelContainer.style.display = 'block';
+        title.textContent = 'Крути барабан! 🎡';
+        
+        // Очищаем сцену торта
+        if (animationId) {
+            cancelAnimationFrame(animationId);
+            animationId = null;
+        }
+        if (cakeRenderer) {
+            cakeRenderer.dispose();
+            const canvas = document.querySelector('#cake-scene canvas');
+            if (canvas) canvas.remove();
+        }
+        // Сбрасываем переменные
+        cakeScene = null;
+        cakeCamera = null;
+        cakeRenderer = null;
+        cakeControls = null;
+        cakeGroup = null;
+        slices = [];
+        slicesLeft = 8;
+        disappearingSlices = [];
     });
 }

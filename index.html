@@ -40,7 +40,25 @@
             <h2 id="congrats-text">С Днём Рождения! 🎂</h2>
             <button id="return-btn" class="btn-return">Вернуться к колесу</button>
         </div>
+            <!-- === ЭКРАН С ТОРТОМ === -->
+    <div id="cake-screen" style="display: none;">
+        <div id="cake-scene">
+            <h2 id="counter">Осталось кусочков: 8</h2>
+            <p class="hint">🖱️ Крути мышкой · 🖱️ Кликай по куску торта</p>
+        </div>
+        <div id="win-screen" class="hidden">
+            <img src="https://media.giphy.com/media/3o6ZsZdNs3yE5l6hWM/giphy.gif" alt="yummy">
+            <h1>Весь торт схавала! 😋</h1>
+            <p>Ты настоящий сладкоежка! 🍰✨</p>
+            <button id="back-to-wheel-btn" class="btn-return">Вернуться к колесу 🎡</button>
+        </div>
     </div>
+
+    <!-- Подключаем Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    
+    <!-- Твой скрипт -->
     <script src="script.js"></script>
 </body>
 </html>
