@@ -8,19 +8,22 @@
 </head>
 <body>
     <div class="container">
-        <img src="images/CatDancing.gif" alt="Cat" class="wanthug">
+        <img src="images/CatDancing.gif" alt="Cat" class="wanthug" id="cat-image">
         <h1 id="title">У тебя сегодня День Рождения?</h1>
         
+        <!-- Кнопки НЕТ и ДА -->
         <div class="buttons" id="buttons">
             <button id="no-btn" class="btn-no">Нет</button>
             <button id="yes-btn" class="btn-yes">Да</button>
         </div>
 
-        <div id="next-stage" class="hidden">
+        <!-- Кнопка ДАЛЕЕ - скрыта по умолчанию -->
+        <div id="next-stage" style="display: none;">
             <button id="next-btn" class="btn-next">Далее</button>
         </div>
 
-        <div id="wheel-container" class="hidden">
+        <!-- КОЛЕСО - скрыто по умолчанию -->
+        <div id="wheel-container" style="display: none;">
             <div class="wheel-wrapper">
                 <div class="arrow">▼</div>
                 <div class="wheel" id="wheel">
@@ -30,7 +33,7 @@
                     <div class="sector sector-4"><span>4</span></div>
                 </div>
             </div>
-            <button id="spin-btn" class="btn-spin">Крути</button>
+            <button id="spin-btn" class="btn-spin">Крутить</button>
             <div id="result" class="result"></div>
         </div>
     </div>

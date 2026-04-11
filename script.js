@@ -1,6 +1,7 @@
+// Получаем элементы
 const yesBtn = document.getElementById('yes-btn');
 const noBtn = document.getElementById('no-btn');
-const catImage = document.querySelector('.wanthug');
+const catImage = document.getElementById('cat-image');
 const title = document.getElementById('title');
 const buttonsContainer = document.getElementById('buttons');
 const nextStage = document.getElementById('next-stage');
@@ -8,15 +9,15 @@ const wheelContainer = document.getElementById('wheel-container');
 
 let yesHoverCount = 0;
 
-// Кнопка НЕТ
+// ========== КНОПКА "НЕТ" ==========
 noBtn.addEventListener('click', () => {
     title.textContent = 'Ответ неправильный';
     catImage.src = 'images/Dog.gif';
-    buttonsContainer.classList.add('hidden');
-    nextStage.classList.remove('hidden');
+    buttonsContainer.style.display = 'none';  // Скрываем кнопки Нет/Да
+    nextStage.style.display = 'block';        // Показываем кнопку Далее
 });
 
-// Кнопка ДА - убегает
+// ========== КНОПКА "ДА" (убегает) ==========
 yesBtn.addEventListener('mouseover', () => {
     if (yesHoverCount >= 10) return;
     
@@ -37,24 +38,24 @@ yesBtn.addEventListener('mouseover', () => {
     yesBtn.style.top = randomY + 'px';
 });
 
-// Клик на ДА
+// ========== КЛИК НА "ДА" ==========
 yesBtn.addEventListener('click', () => {
-    buttonsContainer.classList.add('hidden');
+    buttonsContainer.style.display = 'none';  // Скрываем кнопки
     title.textContent = 'Да ладно, ничесе 😮';
     catImage.src = 'images/Rabbit.gif';
     document.body.style.background = 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #ff9a9e 100%)';
-    nextStage.classList.remove('hidden');
+    nextStage.style.display = 'block';        // Показываем кнопку Далее
 });
 
-// Кнопка Далее
+// ========== КНОПКА "ДАЛЕЕ" ==========
 document.getElementById('next-btn').addEventListener('click', () => {
-    nextStage.classList.add('hidden');
-    catImage.style.display = 'none';
-    wheelContainer.classList.remove('hidden');
-    title.textContent = 'Крути барабан';
+    nextStage.style.display = 'none';         // Скрываем кнопку Далее
+    catImage.style.display = 'none';          // УБИРАЕМ КАРТИНКУ
+    wheelContainer.style.display = 'block';   // Показываем КОЛЕСО
+    title.textContent = 'Крути барабан! 🎡';
 });
 
-// Логика колеса
+// ========== ЛОГИКА КОЛЕСА ==========
 const wheel = document.getElementById('wheel');
 const spinBtn = document.getElementById('spin-btn');
 const resultEl = document.getElementById('result');
@@ -91,14 +92,14 @@ spinBtn.addEventListener('click', () => {
     wheel.style.transform = `rotate(${currentRotation}deg)`;
     
     setTimeout(() => {
-        resultEl.textContent = `Выпало: ${sector}! `;
+        resultEl.textContent = `Выпало: ${sector}! 🎉`;
         isSpinning = false;
         spinBtn.disabled = false;
         
         if (sector === 1) {
             setTimeout(() => {
                 title.textContent = 'С Днём Рождения! 🎂';
-                catImage.src = 'images/Leo.gif';
+                catImage.src = 'images/CatDancing.gif';
                 catImage.style.display = 'block';
             }, 500);
         }
