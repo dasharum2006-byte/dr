@@ -21,7 +21,7 @@ noBtn.addEventListener('click', () => {
 
 // === КНОПКА "ДА" (убегает при наведении) ===
 yesBtn.addEventListener('mouseover', () => {
-    if (yesHoverCount >= 8) return;
+    if (yesHoverCount >= 10) return;
     yesHoverCount++;
     const container = document.querySelector('.container');
     const containerRect = container.getBoundingClientRect();
@@ -40,7 +40,7 @@ yesBtn.addEventListener('click', () => {
     buttonsWrapper.style.display = 'none';
     title.textContent = 'Да ладно, ничесе 😮';
     catImage.src = 'images/Rabbit.gif';
-    document.body.style.background = 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #ff9a9e 100%)';
+    document.body.style.background = 'linear-gradient(135deg, #c79aff 0%, #cffefe 50%, #155ccf8c 100%)';
     nextStage.style.display = 'block';
 });
 
@@ -94,37 +94,39 @@ spinBtn.addEventListener('click', () => {
     currentRotation += 360 * spins + (360 - targetAngle) + randomOffset;
     wheel.style.transform = `rotate(${currentRotation}deg)`;
 
-    setTimeout(() => {
-        resultEl.textContent = `Выпало: ${sector}! 🎉`;
-        isSpinning = false;
-        spinBtn.disabled = false;
+setTimeout(() => {
+    resultEl.textContent = `Выпало: ${sector}! 🎉`;
+    isSpinning = false;
+    spinBtn.disabled = false;
 
-        // Скрываем ВСЕ экраны перед показом нового
-        wheelContainer.style.display = 'none';
-        document.getElementById('congrats-screen').style.display = 'none';
-        document.getElementById('cake-screen').style.display = 'none';
-        document.getElementById('heart-screen').style.display = 'none';
-        document.getElementById('final-congrats-screen').style.display = 'none';
+    // Скрываем ВСЕ экраны (включая scratch-screen!)
+    wheelContainer.style.display = 'none';
+    document.getElementById('congrats-screen').style.display = 'none';
+    document.getElementById('cake-screen').style.display = 'none';
+    document.getElementById('scratch-screen').style.display = 'none'; // ← ВОТ ЭТОГО НЕ ХВАТАЛО!
+    document.getElementById('final-congrats-screen').style.display = 'none';
 
-        // Показываем нужный экран
-        if (sector === 1) {
-            document.getElementById('congrats-screen').style.display = 'block';
-            title.textContent = 'С Днём Рождения 🎂';
-        } 
-        else if (sector === 2) {
-            document.getElementById('cake-screen').style.display = 'block';
-            title.textContent = 'Съешь весь торт 🍰';
-            initCake();
-        } 
-        else if (sector === 3) {
-            document.getElementById('heart-screen').style.display = 'flex';
-            drawHeart();
-        } 
-        else if (sector === 4) {
-            document.getElementById('final-congrats-screen').style.display = 'flex';
-            if (typeof startFinalConfetti === 'function') startFinalConfetti();
-        }
-    }, 4000);
+    // Показываем нужный экран
+    if (sector === 1) {
+        document.getElementById('congrats-screen').style.display = 'block';
+        title.textContent = 'С Днём Рождения 🎂';
+    } 
+    else if (sector === 2) {
+        document.getElementById('cake-screen').style.display = 'block';
+        title.textContent = 'Съешь весь торт 🍰';
+        initCake();
+    } 
+    else if (sector === 3) {
+        // СЕКТОР 3: Скретч-карта
+        document.getElementById('scratch-screen').style.display = 'flex';
+        title.textContent = 'Испытай удачу броу 🎫';
+        initScratchCard(); // Запускаем функцию стирания
+    }
+    else if (sector === 4) {
+        document.getElementById('final-congrats-screen').style.display = 'flex';
+        if (typeof startFinalConfetti === 'function') startFinalConfetti();
+    }
+}, 4000);
 });
 
 // === КНОПКА "ВЕРНУТЬСЯ" ===
@@ -392,85 +394,99 @@ if (backToWheelBtn) {
         disappearingSlices = [];
     });
 }
-// ===== ФУНКЦИЯ РИСОВАНИЯ СЕРДЦА =====
-function drawHeart() {
-    const canvas = document.getElementById('heart-canvas');
+// ===== СКРЕТЧ-КАРТА (Вместо сердца) =====
+function initScratchCard() {
+    const canvas = document.getElementById('scratch-canvas');
     const ctx = canvas.getContext('2d');
-    const title = document.getElementById('heart-title');
+    const wrapper = document.querySelector('.scratch-card-wrapper');
+    const penguinImg = document.querySelector('.penguin-img');
     
-    // Сбрасываем размер и очищаем (чтобы не рисовалось поверх старого)
-    canvas.width = 400;
-    canvas.height = 400;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Устанавливаем размер холста точно по размеру карточки
+    canvas.width = wrapper.offsetWidth;
+    canvas.height = wrapper.offsetHeight;
     
-    // Настройки линии
-    ctx.lineWidth = 6;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.strokeStyle = '#ff0040';
-    ctx.shadowColor = '#ff0040';
-    ctx.shadowBlur = 20;
+    // Закрашиваем серым цветом (покрытие)
+    ctx.fillStyle = '#b0b0b0';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    // Генерируем точки сердца
-    const points = [];
-    const totalPoints = 300;
-    
-    for (let i = 0; i <= totalPoints; i++) {
-        const t = (i / totalPoints) * Math.PI * 2;
-        const x = 16 * Math.pow(Math.sin(t), 3);
-        const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
-        
-        // Масштабируем и центрируем под canvas 400x400
-        points.push({
-            x: x * 10 + 200,
-            y: y * 10 + 180
-        });
-    }
-    
-    let current = 0;
-    
-    function animate() {
-        ctx.beginPath();
-        ctx.moveTo(points[0].x, points[0].y);
-        
-        for (let i = 1; i <= current; i++) {
-            ctx.lineTo(points[i].x, points[i].y);
-        }
-        ctx.stroke();
-        
-        // "Кисточка" в конце линии
-        if (current < totalPoints) {
-            ctx.beginPath();
-            ctx.arc(points[current].x, points[current].y, 7, 0, Math.PI * 2);
-            ctx.fillStyle = '#ff8fa3';
-            ctx.fill();
-        }
-        
-        current++;
-        
-        if (current <= totalPoints) {
-            requestAnimationFrame(animate);
-        } else {
-            // Когда дорисовало
-            title.textContent = "С Днём Рождения! 💖";
-        }
-    }
-    
-    animate();
-}
+    // Добавляем текст "Потри меня" поверх серого
+    ctx.font = 'bold 24px Arial'; /* Было 20px */
+    ctx.fillStyle = '#666';
+    ctx.textAlign = 'center';
+    ctx.fillText('✨ СТИРАЙ ЗДЕСЬ ✨', canvas.width / 2, canvas.height / 2);
 
-// ===== КНОПКА "ВЕРНУТЬСЯ" ОТ СЕРДЦА =====
-const backToWheelBtnHeart = document.getElementById('back-to-wheel-from-heart');
-if (backToWheelBtnHeart) {
-    backToWheelBtnHeart.addEventListener('click', () => {
-        // Скрываем сердце
-        document.getElementById('heart-screen').style.display = 'none';
+    let isDrawing = false;
+
+    // Функция стирания
+    function scratch(x, y) {
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(x, y, 30, 0, Math.PI * 2); /* Было 25 — увеличил радиус */
+        ctx.fill();
+    }
+
+    // Получение координат (для мыши и тача)
+    function getPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        let clientX, clientY;
         
-        // Показываем колесо
+        if (e.touches && e.touches.length > 0) {
+            clientX = e.touches[0].clientX;
+            clientY = e.touches[0].clientY;
+        } else {
+            clientX = e.clientX;
+            clientY = e.clientY;
+        }
+        
+        return {
+            x: clientX - rect.left,
+            y: clientY - rect.top
+        };
+    }
+
+    // --- Обработчики событий ---
+    
+    // Мышь
+    canvas.addEventListener('mousedown', (e) => { isDrawing = true; const pos = getPos(e); scratch(pos.x, pos.y); });
+    canvas.addEventListener('mousemove', (e) => { if (isDrawing) { const pos = getPos(e); scratch(pos.x, pos.y); } });
+    canvas.addEventListener('mouseup', () => { isDrawing = false; });
+    canvas.addEventListener('mouseleave', () => { isDrawing = false; });
+
+    // Телефон (Touch)
+    canvas.addEventListener('touchstart', (e) => { 
+        e.preventDefault();
+        isDrawing = true; 
+        const pos = getPos(e); 
+        scratch(pos.x, pos.y); 
+    });
+    canvas.addEventListener('touchmove', (e) => { 
+        e.preventDefault(); 
+        if (isDrawing) { const pos = getPos(e); scratch(pos.x, pos.y); } 
+    });
+    canvas.addEventListener('touchend', () => { isDrawing = false; });
+    
+    // === СМЕНА ИЗОБРАЖЕНИЯ ЧЕРЕЗ 3 СЕКУНДЫ ===
+    setTimeout(() => {
+        // Меняем на другую картинку (замени ссылку на свою)
+        penguinImg.src = "images/EyesPenguins.gif";
+        
+        // Добавляем эффект появления
+        penguinImg.style.transform = 'scale(0.8)';
+        setTimeout(() => {
+            penguinImg.style.transform = 'scale(1)';
+        }, 100);
+    }, 3000);
+}
+// === КНОПКА ВОЗВРАТА ОТ СКРЕТЧ-КАРТЫ ===
+const backFromScratchBtn = document.getElementById('back-to-wheel-from-scratch');
+if (backFromScratchBtn) {
+    backFromScratchBtn.addEventListener('click', () => {
+        document.getElementById('scratch-screen').style.display = 'none';
         wheelContainer.style.display = 'block';
-        title.textContent = 'Крути барабан  🎡';
+        title.textContent = 'Крути барабан! 🎡';
     });
 }
+
 // ===== КОНФЕТТИ ДЛЯ СЕКТОРА 4 =====
 function startFinalConfetti() {
     // Проверяем, подключена ли библиотека confetti

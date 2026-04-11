@@ -20,7 +20,7 @@
         </div>
 
         <div id="next-stage" style="display: none;">
-            <button id="next-btn" class="btn-next">Далее 🎁</button>
+            <button id="next-btn" class="btn-next">Далее</button>
         </div>
 
         <div id="wheel-container" style="display: none;">
@@ -49,7 +49,7 @@
         </div>
         <div id="win-screen" class="hidden">
             <img src="images/Chubzik.gif" class="congrats-img" alt="yummy">
-            <h1>Весь торт схавала!😋</h1>
+            <h1>Весь торт схавал</h1>
             <button id="back-to-wheel-btn" class="btn-return">Вернуться к колесу 🎡</button>
         </div>
     </div>
@@ -57,38 +57,51 @@
     <!-- Подключаем Three.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <!-- === ЭКРАН С СЕРДЦЕМ === -->
-<div id="heart-screen" style="display: none;">
-    <canvas id="heart-canvas"></canvas>
-    <button id="back-to-wheel-from-heart" class="btn-return">Вернуться к колесу 🎡</button>
+    <!-- === ЭКРАН СКРЕТЧ-КАРТЫ (Сектор 3) === -->
+<div id="scratch-screen" style="display: none;">
+    <h2>Сотри слой 🎫</h2>
+    
+    <div class="scratch-card-wrapper">
+        <!-- Слой "Сюрприз" (картинка и текст) -->
+        <div class="scratch-reward">
+            <!-- Вставь сюда ссылку на своего пингвина или оставь эту -->
+            <img src="images/MSBig.gif" alt="Penguin" class="penguin-img">
+            <p class="scratch-text">
+                <strong>Пингвин с ДР братаааанчик</strong><br>
+                Не болей, а то в снег кину
+            </p>
+        </div>
+        
+        <!-- Слой "Покрытие" (Canvas) -->
+        <canvas id="scratch-canvas"></canvas>
+    </div>
+
+    <button id="back-to-wheel-from-scratch" class="btn-return">Вернуться к колесу 🎡</button>
 </div>
 <!-- === ЭКРАН С ПОЗДРАВЛЕНИЕМ (Сектор 4) === -->
 <div id="final-congrats-screen" style="display: none;">
     <div class="congrats-card">
-        <img src="images/kittens.gif" alt="birthday celebration" class="celebration-gif">
+        <img src="images/Yahoo.gif" alt="birthday celebration" class="celebration-gif">
         
-        <h2 class="congrats-title">Настена</h2>
+        <h2 class="congrats-title">Ванееек</h2>
         
         <div class="wishes-text">
-            <p> <strong>С Днём Рождения!</strong> 🌸</p>
+            <p> <strong>С Днём Рождения!</strong> 😉</p>
             <br>
-            <p>Желаю тебе <span class="highlight">безграничного счастья</span></p>
+            <p>Желаю тебе <span class="highlight"> счастья и чтобы сессию всю закрыл 😎</span></p>
             <br>
-            <p><strong>Крепкого здоровья</strong> тебе</p>
+            <p><strong>Крепкого здоровья</strong> тебе и много много денег</p>
             <br>
-            <p>Пусть каждый день приносит  радость</span> и новые поводы для улыбки!😊</p>
-            <br>
-            <p><strong>Невероятной любви</strong>, которая окрыляет и вдохновляет!💕</p>
+            <p>Пусть каждый день приносит  радость 😊</p>
             <br>
             <p>Пусть все твои <span class="highlight">мечты сбываются</span>🌟</p>
             <br>
             <p><strong>Удачи</strong> во всех начинаниях и <strong>успеха</strong> в делах!</p>
             <br>
-            <p>Оставайся такой же <span class="highlight">замечательной, доброй и прекрасной</span>,какая ты есть!</p>
+            <p>Оставайся тким же  <span class="highlight">прикольным, доброй и умным</span></p>
             <br>
-            <p style="font-size: 1.2rem; color: #d81b607d;"><strong>Ты заслуживаешь всего самого лучшего!</strong></p>
+            <p style="font-size: 1.2rem; color: #1b86d851;"><strong>Ты заслуживаешь всего самого лучшего!</strong></p>
         </div>
-        
         <button id="back-to-wheel-from-final" class="btn-return">Ещё раз крути  🎡</button>
     </div>
 </div>

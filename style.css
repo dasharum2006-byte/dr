@@ -12,14 +12,14 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #ffd1dc77 0%, #b5d8ff7f 50%, #ffd1dc7e 100%);
+    background: linear-gradient(135deg, #1e3a8a77 0%, #0ea5e97f 50%, #312e817e 100%);
 }
 
 .container {
-    background: white;
+    background: #f8fafc;
     border-radius: 30px;
     padding: 40px 30px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 15px 35px rgba(15, 23, 42, 0.12);
     width: 90%;
     max-width: 500px;
     max-height: 95vh;
@@ -43,7 +43,7 @@ body {
 
 /* Заголовок */
 h1 {
-    color: #d81b60;
+    color: #1e40af;
     margin-bottom: 40px;
     font-size: 1.8rem;
     font-weight: 600;
@@ -89,21 +89,22 @@ h1 {
     transform: scale(1.05);
 }
 
-/* Кнопка НЕТ - розовая */
+/* Кнопка НЕТ - серо-синяя */
 .btn-no {
-    background: linear-gradient(135deg, #ff6bb8, #ee52cf);
+    background: linear-gradient(135deg, #64748b, #475569);
     order: 1;
 }
 
-/* Кнопка ДА - зелёная */
+/* Кнопка ДА - синяя */
 .btn-yes {
-    background: linear-gradient(135deg, #4ca8af, #4594a0);
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
     order: 2;
+    transition: none !important; 
 }
 
 /* Кнопка ДАЛЕЕ */
 .btn-next {
-    background: linear-gradient(135deg, #6a82fbb7, #fc5c7c79);
+    background: linear-gradient(135deg, #6366f1b7, #0ea5e979);
     margin-top: 20px;
 }
 
@@ -121,7 +122,7 @@ h1 {
     left: 50%;
     transform: translateX(-50%);
     font-size: 2.5rem;
-    color: #d81b60;
+    color: #1e40af;
     z-index: 10;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
@@ -137,64 +138,59 @@ h1 {
     transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
 }
 
-/* Сектора колеса */
+/* === СЕКТОРА КОЛЕСА (ИСПРАВЛЕНО) === */
 .sector {
     position: absolute;
     width: 50%;
     height: 50%;
     transform-origin: bottom right;
     display: flex;
-    align-items: center;
+    align-items: flex-start; /* Текст ближе к внешнему краю */
     justify-content: center;
+    overflow: hidden; /* Чтобы текст не вылезал за треугольник */
 }
 
-.sector span {
+.sector span,
+.sector .sector-emoji {
     position: absolute;
+    font-size: 2.5rem; /* Увеличили для эмодзи */
     font-weight: bold;
-    font-size: 1.8rem;
-    color: #333;
-    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.9);
+    color: white;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    /* Позиционируем текст в центре каждого сектора */
+    left: 75%;
+    top: 25%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
 }
 
-/* Сектор 1 - розовый */
+/* Сектор 1 - синий (0°) */
 .sector-1 {
-    background: #ffb6c1;
+    background: #3b82f6;
     transform: rotate(0deg);
 }
-.sector-1 span {
-    transform: rotate(45deg) translate(70px, -70px) rotate(-45deg);
-}
 
-/* Сектор 2 - голубой */
+/* Сектор 2 - бирюзовый (90°) */
 .sector-2 {
-    background: #97e3fd;
+    background: #0ea5e9;
     transform: rotate(90deg);
 }
-.sector-2 span {
-    transform: rotate(135deg) translate(70px, -70px) rotate(-135deg);
-}
 
-/* Сектор 3 - зелёный */
+/* Сектор 3 - индиго (180°) */
 .sector-3 {
-    background: #4074d5;
+    background: #6366f1;
     transform: rotate(180deg);
 }
-.sector-3 span {
-    transform: rotate(225deg) translate(70px, -70px) rotate(-225deg);
-}
 
-/* Сектор 4 - фиолетовый */
+/* Сектор 4 - изумрудный (270°) */
 .sector-4 {
-    background: #dda0dd;
+    background: #10b981;
     transform: rotate(270deg);
-}
-.sector-4 span {
-    transform: rotate(315deg) translate(70px, -70px) rotate(-315deg);
 }
 
 /* Кнопка КРУТИТЬ */
 .btn-spin {
-    background: linear-gradient(135deg, #11998e, #38cdef);
+    background: linear-gradient(135deg, #2563eb, #06b6d4);
     margin: 20px 0;
 }
 
@@ -208,7 +204,7 @@ h1 {
 .result {
     font-size: 1.6rem;
     font-weight: bold;
-    color: #d81b60;
+    color: #1e40af;
     margin-top: 15px;
     min-height: 40px;
 }
@@ -223,24 +219,22 @@ h1 {
 }
 
 #congrats-text {
-    color: #d81b60;
+    color: #1e40af;
     margin-bottom: 20px;
     font-size: 2rem;
 }
 
 /* Кнопка ВЕРНУТЬСЯ */
 .btn-return {
-    background: linear-gradient(135deg, #a8edea, #fed6e3);
-    color: #333;
-    border: 2px solid #d81b60;
+    background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+    color: #334155;
+    border: 2px solid #1e40af;
     padding: 14px 30px;
 }
 
 .btn-return:hover {
     transform: scale(1.05);
 }
-
-
 
 /* 3D сцена */
 #cake-scene {
@@ -258,7 +252,7 @@ h1 {
     padding: 12px 24px;
     border-radius: 15px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    color: #d81b60;
+    color: #1e40af;
     font-size: 1.3rem;
     font-weight: bold;
     margin-bottom: 10px;
@@ -270,7 +264,7 @@ h1 {
     padding: 8px 16px;
     border-radius: 10px;
     font-size: 0.9rem;
-    color: #777;
+    color: #64748b;
     z-index: 10;
 }
 
@@ -280,7 +274,7 @@ h1 {
     top: 0; left: 0;
     width: 100vw;
     height: 100vh;
-    background: linear-gradient(135deg, #fce4ec, #f3e5f5);
+    background: linear-gradient(135deg, #eff6ff, #e0e7ff);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -299,20 +293,20 @@ h1 {
 }
 
 #win-screen h1 {
-    color: #d81b60;
+    color: #1e40af;
     font-size: 2rem;
     margin-bottom: 10px;
 }
 
 #win-screen p {
-    color: #555;
+    color: #475569;
     font-size: 1.2rem;
     margin-bottom: 20px;
 }
 
 #win-screen button {
     padding: 14px 32px;
-    background: #d81b60;
+    background: #2563eb;
     color: white;
     border: none;
     border-radius: 12px;
@@ -321,15 +315,16 @@ h1 {
     font-weight: bold;
 }
 
-#win-screen button:hover { background: #c2185b; }
+#win-screen button:hover { background: #1d4ed8; }
 
 @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.9); }
     to { opacity: 1; transform: scale(1); }
 }
+
 /* Стили для кнопки возврата к колесу */
 #back-to-wheel-btn {
-    background: linear-gradient(135deg, #6a82fb, #fc5c7d);
+    background: linear-gradient(135deg, #6366f1, #2563eb);
     color: white;
     border: none;
     padding: 14px 32px;
@@ -346,13 +341,13 @@ h1 {
     transform: scale(1.05);
 }
 
-/* Экран победы */
+/* Экран победы (дубль) */
 #win-screen {
     position: fixed;
     top: 0; left: 0;
     width: 100vw;
     height: 100vh;
-    background: linear-gradient(135deg, #fce4ec, #f3e5f5);
+    background: linear-gradient(135deg, #eff6ff, #e0e7ff);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -373,13 +368,13 @@ h1 {
 }
 
 #win-screen h1 {
-    color: #d81b60;
+    color: #1e40af;
     font-size: 2rem;
     margin-bottom: 10px;
 }
 
 #win-screen p {
-    color: #555;
+    color: #475569;
     font-size: 1.2rem;
     margin-bottom: 20px;
 }
@@ -389,7 +384,7 @@ h1 {
     to { opacity: 1; transform: scale(1); }
 }
 
-/* 3D сцена */
+/* 3D сцена (дубль) */
 #cake-scene {
     width: 100vw;
     height: 100vh;
@@ -405,7 +400,7 @@ h1 {
     padding: 12px 24px;
     border-radius: 15px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    color: #d81b60;
+    color: #1e40af;
     font-size: 1.3rem;
     font-weight: bold;
     z-index: 10;
@@ -420,17 +415,18 @@ h1 {
     padding: 8px 16px;
     border-radius: 10px;
     font-size: 0.9rem;
-    color: #777;
+    color: #64748b;
     z-index: 10;
 }
+
 /* Экран с сердцем */
 #heart-screen {
     position: fixed;
     top: 0; left: 0;
     width: 100vw;
     height: 100vh;
-    background: #0a0205;
-    display: none; /* Скрыт по умолчанию */
+    background: #0f172a;
+    display: none;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -440,125 +436,125 @@ h1 {
 }
 
 #heart-title {
-    color: #ff4d6d;
+    color: #38bdf8;
     font-size: 1.8rem;
     margin-bottom: 20px;
     font-weight: bold;
-    text-shadow: 0 0 10px rgba(255, 77, 109, 0.6);
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
     text-align: center;
 }
 
 #heart-canvas {
-    /* Фиксируем пропорции, чтобы сердце не уезжало */
     width: min(400px, 90vw);
     height: min(400px, 90vw);
     background: transparent;
     border-radius: 15px;
-    box-shadow: 0 0 40px rgba(255, 0, 40, 0.3);
+    box-shadow: 0 0 40px rgba(56, 189, 248, 0.3);
 }
 
 .btn-return {
     margin-top: 30px;
     padding: 12px 30px;
-    background: linear-gradient(135deg, #ff416c, #ff4b2b);
+    background: linear-gradient(135deg, #2563eb, #0ea5e9);
     color: white;
     border: none;
     border-radius: 25px;
     font-size: 1.1rem;
     cursor: pointer;
     font-weight: bold;
-    box-shadow: 0 4px 15px rgba(255, 65, 108, 0.4);
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
     transition: transform 0.2s;
 }
 
 .btn-return:hover { transform: scale(1.05); }
-/* Экран с финальным поздравлением — КОМПАКТНЫЙ */
+
+/* Экран с финальным поздравлением */
 #final-congrats-screen {
     position: fixed;
     top: 0; left: 0;
     width: 100vw;
     height: 100vh;
-    background: linear-gradient(135deg, #fce4ec, #f3e5f5, #e8eaf6);
+    background: linear-gradient(135deg, #eff6ff, #e0e7ff, #dbeafe);
     display: none;
     align-items: center;
     justify-content: center;
     z-index: 100;
     overflow-y: auto;
-    padding: 10px; /* Было 20px */
+    padding: 10px;
     box-sizing: border-box;
 }
 
 .congrats-card {
     background: white;
-    border-radius: 20px; /* Было 30px */
-    padding: 20px 15px; /* Было 40px 30px — УМЕНЬШИЛА В 2 РАЗА! */
-    max-width: 500px; /* Было 600px */
+    border-radius: 20px;
+    padding: 20px 15px;
+    max-width: 500px;
     width: 100%;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
     text-align: center;
     animation: slideUp 0.6s ease;
-    max-height: 95vh; /* Чтобы точно влезало */
-    overflow-y: auto; /* Прокрутка если что */
+    max-height: 95vh;
+    overflow-y: auto;
 }
 
 .celebration-gif {
     width: 100%;
-    max-width: 200px; /* Было 300px — УМЕНЬШИЛА */
+    max-width: 200px;
     border-radius: 15px;
-    margin-bottom: 15px; /* Было 25px */
+    margin-bottom: 15px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .congrats-title {
-    font-size: 1.8rem; /* Было 2.5rem */
-    color: #d81b60;
-    margin-bottom: 10px; /* Было 20px */
+    font-size: 1.8rem;
+    color: #1e40af;
+    margin-bottom: 10px;
     font-weight: bold;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .wishes-text {
-    font-size: 0.9rem; /* Было 1.05rem */
-    line-height: 1.5; /* Было 1.8 */
-    color: #555;
-    margin: 10px 0; /* Было 20px 0 */
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #475569;
+    margin: 10px 0;
     text-align: left;
 }
 
 .wishes-text p {
-    margin: 5px 0; /* Было 10px 0 — УМЕНЬШИЛА В 2 РАЗА! */
+    margin: 5px 0;
 }
 
 .wishes-text strong {
-    color: #d81b60;
+    color: #1e40af;
 }
 
 .wishes-text .highlight {
-    color: #ff416c;
+    color: #0284c7;
     font-weight: bold;
-    background: linear-gradient(120deg, rgba(255, 65, 108, 0.1), rgba(255, 75, 43, 0.1));
-    padding: 1px 5px; /* Было 2px 8px */
+    background: linear-gradient(120deg, rgba(14, 165, 233, 0.1), rgba(59, 130, 246, 0.1));
+    padding: 1px 5px;
     border-radius: 3px;
 }
 
 .emoji-decoration {
-    font-size: 1.8rem; /* Было 2.5rem */
-    margin: 15px 0; /* Было 25px 0 */
+    font-size: 1.8rem;
+    margin: 15px 0;
     letter-spacing: 8px;
     animation: bounce 1s ease infinite;
 }
 
 .btn-return {
-    margin-top: 15px; /* Было 30px */
-    padding: 10px 25px; /* Было 12px 30px */
-    background: linear-gradient(135deg, #ff416c, #ff4b2b);
+    margin-top: 15px;
+    padding: 10px 25px;
+    background: linear-gradient(135deg, #2563eb, #0ea5e9);
     color: white;
     border: none;
     border-radius: 20px;
-    font-size: 1rem; /* Было 1.1rem */
+    font-size: 1rem;
     cursor: pointer;
     font-weight: bold;
-    box-shadow: 0 4px 15px rgba(255, 65, 108, 0.4);
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
     transition: transform 0.2s;
 }
 
@@ -569,7 +565,7 @@ h1 {
 /* Адаптив для маленьких экранов */
 @media (max-width: 480px) {
     .congrats-card {
-        padding: 15px 10px; /* Ещё меньше на телефонах */
+        padding: 15px 10px;
         max-width: 95vw;
     }
     
@@ -584,4 +580,80 @@ h1 {
     .celebration-gif {
         max-width: 180px;
     }
+}
+/* Экран скретч-карты */
+#scratch-screen {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #2c3e50;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+#scratch-screen h2 {
+    color: white;
+    margin-bottom: 25px; /* Было 20px */
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    font-size: 1.8rem;
+}
+
+.scratch-card-wrapper {
+    position: relative;
+    width: 400px; /* Было 300px — УВЕЛИЧИЛ! */
+    height: 480px; /* Было 350px — УВЕЛИЧИЛ! */
+    border-radius: 20px; /* Было 15px */
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+    user-select: none;
+}
+
+/* Сюрприз под слоем */
+.scratch-reward {
+    width: 100%;
+    height: 100%;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px; /* Было 20px */
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.penguin-img {
+    width: 180px; /* Было 120px — УВЕЛИЧИЛ! */
+    height: 180px; /* Было 120px — УВЕЛИЧИЛ! */
+    border-radius: 50%;
+    margin-bottom: 25px; /* Было 15px */
+    object-fit: cover;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+}
+
+.penguin-img:hover {
+    transform: scale(1.05);
+}
+
+.scratch-text {
+    font-size: 1.3rem; /* Было 1.1rem */
+    color: #333;
+    line-height: 1.5; /* Было 1.4 */
+    font-weight: 600;
+}
+
+/* Холст для стирания */
+#scratch-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="white" opacity="0.6"/></svg>') 16 16, auto;
+    touch-action: none;
 }
