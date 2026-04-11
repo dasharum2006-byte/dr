@@ -11,18 +11,16 @@
         <img src="images/CatDancing.gif" alt="Cat" class="wanthug" id="cat-image">
         <h1 id="title">У тебя сегодня День Рождения?</h1>
         
-        <!-- Кнопки НЕТ и ДА -->
-        <div class="buttons" id="buttons">
+        <!-- Контейнер кнопок: он должен быть relative, чтобы кнопки убегали внутри него или рядом -->
+        <div class="buttons-wrapper" id="buttons-wrapper">
             <button id="no-btn" class="btn-no">Нет</button>
             <button id="yes-btn" class="btn-yes">Да</button>
         </div>
 
-        <!-- Кнопка ДАЛЕЕ - скрыта по умолчанию -->
         <div id="next-stage" style="display: none;">
-            <button id="next-btn" class="btn-next">Далее</button>
+            <button id="next-btn" class="btn-next">Далее 🎁</button>
         </div>
 
-        <!-- КОЛЕСО - скрыто по умолчанию -->
         <div id="wheel-container" style="display: none;">
             <div class="wheel-wrapper">
                 <div class="arrow">▼</div>
@@ -33,8 +31,14 @@
                     <div class="sector sector-4"><span>4</span></div>
                 </div>
             </div>
-            <button id="spin-btn" class="btn-spin">Крутить</button>
+            <button id="spin-btn" class="btn-spin">Крутить! 🎡</button>
             <div id="result" class="result"></div>
+        </div>
+
+        <div id="congrats-screen" style="display: none;">
+            <img src="images/CatDancing.gif" class="congrats-img" id="congrats-img">
+            <h2 id="congrats-text">С Днём Рождения! 🎂</h2>
+            <button id="return-btn" class="btn-return">Вернуться к колесу</button>
         </div>
     </div>
     <script src="script.js"></script>

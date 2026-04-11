@@ -1,11 +1,7 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-family: 'Segoe UI', sans-serif;
     height: 100vh;
     width: 100vw;
     overflow: hidden;
@@ -26,197 +22,93 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     text-align: center;
-    overflow: hidden;
+    overflow: hidden; /* Важно! */
+    position: relative; /* Чтобы кнопки не улетали за пределы */
 }
 
 .wanthug {
     width: 100%;
-    max-width: 280px;
+    max-width: 250px;
     border-radius: 20px;
-    margin-bottom: 30px;
-    transition: opacity 0.3s;
+    margin-bottom: 20px;
 }
 
 h1 {
     color: #d81b60;
-    margin-bottom: 40px;
-    font-size: 1.8rem;
-    font-weight: 600;
-    line-height: 1.4;
-    min-height: 60px;
+    margin-bottom: 30px;
+    font-size: 1.6rem;
 }
 
-.buttons {
+/* Контейнер для кнопок "Да" и "Нет" */
+.buttons-wrapper {
     position: relative;
     width: 100%;
-    min-height: 80px;
+    height: 80px; /* Фиксируем высоту, чтобы не прыгало */
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 20px;
 }
 
-.btn-no {
-    padding: 16px 40px;
-    font-size: 1.2rem;
-    background: linear-gradient(135deg, #ff6bb8, #ee52cf);
-    color: white;
+.btn-no, .btn-yes {
+    padding: 14px 35px;
+    font-size: 1.1rem;
     border: none;
     border-radius: 50px;
     cursor: pointer;
     font-weight: bold;
-    box-shadow: 0 6px 20px rgba(255, 107, 184, 0.4);
+    color: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     transition: transform 0.2s;
-}
-
-.btn-no:hover {
-    transform: scale(1.05);
-}
-
-.btn-yes {
-    padding: 16px 40px;
-    font-size: 1.2rem;
-    background: linear-gradient(135deg, #4CAF50, #45a049);
-    color: white;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    font-weight: bold;
-    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
-    transition: all 0.2s ease-out;
-}
-
-.btn-yes:hover {
-    background: linear-gradient(135deg, #45a049, #3d8f40);
-    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.6);
-}
-
-.btn-next {
-    padding: 16px 40px;
-    font-size: 1.2rem;
-    background: linear-gradient(135deg, #6a82fb, #fc5c7d);
-    color: white;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    font-weight: bold;
-    box-shadow: 0 6px 20px rgba(106, 130, 251, 0.4);
-    transition: transform 0.2s;
-    margin-top: 20px;
-}
-
-.btn-next:hover {
-    transform: scale(1.05);
-}
-
-.wheel-wrapper {
-    position: relative;
-    width: 280px;
-    height: 280px;
-    margin: 20px auto;
-}
-
-.arrow {
-    position: absolute;
-    top: -25px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 2.5rem;
-    color: #d81b60;
     z-index: 10;
 }
 
-.wheel {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    position: relative;
-    overflow: hidden;
-    border: 5px solid #fff;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
-}
+.btn-no { background: linear-gradient(135deg, #ff6bb8, #ee52cf); }
+.btn-yes { background: linear-gradient(135deg, #4CAF50, #45a049); }
 
-.sector {
-    position: absolute;
-    width: 50%;
-    height: 50%;
-    transform-origin: bottom right;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.sector span {
-    position: absolute;
-    font-weight: bold;
-    font-size: 1.8rem;
-    color: #333;
-    text-shadow: 0 1px 3px rgba(255,255,255,0.9);
-}
-
-.sector-1 {
-    background: #ffb6c1;
-    transform: rotate(0deg);
-}
-.sector-1 span {
-    transform: rotate(45deg) translate(70px, -70px) rotate(-45deg);
-}
-
-.sector-2 {
-    background: #add8e6;
-    transform: rotate(90deg);
-}
-.sector-2 span {
-    transform: rotate(135deg) translate(70px, -70px) rotate(-135deg);
-}
-
-.sector-3 {
-    background: #98fb98;
-    transform: rotate(180deg);
-}
-.sector-3 span {
-    transform: rotate(225deg) translate(70px, -70px) rotate(-225deg);
-}
-
-.sector-4 {
-    background: #dda0dd;
-    transform: rotate(270deg);
-}
-.sector-4 span {
-    transform: rotate(315deg) translate(70px, -70px) rotate(-315deg);
-}
-
-.btn-spin {
-    padding: 16px 40px;
-    font-size: 1.2rem;
-    background: linear-gradient(135deg, #11998e, #38ef7d);
-    color: white;
+.btn-next, .btn-spin {
+    padding: 14px 35px;
+    font-size: 1.1rem;
     border: none;
     border-radius: 50px;
     cursor: pointer;
     font-weight: bold;
-    box-shadow: 0 6px 20px rgba(17, 153, 142, 0.4);
-    transition: transform 0.2s;
-    margin: 20px 0;
+    color: white;
+    margin-top: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
+.btn-next { background: linear-gradient(135deg, #6a82fb, #fc5c7d); }
+.btn-spin { background: linear-gradient(135deg, #11998e, #38ef7d); }
 
-.btn-spin:hover {
-    transform: scale(1.05);
+.wheel-wrapper {
+    position: relative;
+    width: 260px;
+    height: 260px;
+    margin: 20px auto;
 }
+.arrow {
+    position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+    font-size: 2.5rem; color: #d81b60; z-index: 10;
+}
+.wheel {
+    width: 100%; height: 100%; border-radius: 50%;
+    border: 5px solid #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+    position: relative; overflow: hidden;
+}
+.sector { position: absolute; width: 50%; height: 50%; transform-origin: bottom right; }
+.sector span { position: absolute; font-weight: bold; font-size: 1.5rem; color: #333; }
 
-.btn-spin:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-}
+.sector-1 { background: #ffb6c1; transform: rotate(0deg); }
+.sector-1 span { transform: rotate(45deg) translate(60px, -60px) rotate(-45deg); }
+.sector-2 { background: #add8e6; transform: rotate(90deg); }
+.sector-2 span { transform: rotate(135deg) translate(60px, -60px) rotate(-135deg); }
+.sector-3 { background: #98fb98; transform: rotate(180deg); }
+.sector-3 span { transform: rotate(225deg) translate(60px, -60px) rotate(-225deg); }
+.sector-4 { background: #dda0dd; transform: rotate(270deg); }
+.sector-4 span { transform: rotate(315deg) translate(60px, -60px) rotate(-315deg); }
 
-.result {
-    font-size: 1.6rem;
-    font-weight: bold;
-    color: #d81b60;
-    margin-top: 15px;
-    min-height: 40px;
-}
+.congrats-img { width: 100%; max-width: 250px; border-radius: 20px; margin-bottom: 20px; }
+#congrats-text { color: #d81b60; margin-bottom: 20px; }
+.btn-return { padding: 12px 30px; background: #eee; border: 2px solid #d81b60; border-radius: 50px; cursor: pointer; font-weight: bold; }
