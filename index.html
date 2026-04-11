@@ -1,39 +1,42 @@
 <!DOCTYPE html>
 <html lang="ru">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>DR</title>
-        <link rel="stylesheet" href="style.css">
-    </head>
-    <body>
-        <div class="container">
-            <img src="images/CatDancing.gif" alt="Kitten" class="wanthug">
-            <h1></h1>
-            <div class = "buttons">
-                <button id="yes-btn">Нет</button>
-                <button id="no-btn">Да</button>
-            </div>
-            <!-- После блока .buttons добавьте: -->
-<div id="next-stage" style="display: none; text-align: center;">
-    <button id="next-btn" class="next-btn">Далее</button>
-</div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DR</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <img src="images/CatDancing.gif" alt="Kitten" class="wanthug">
+        <h1></h1>
+        
+        <div class="buttons">
+            <!-- ✅ Исправлено: id соответствует тексту кнопки -->
+            <button id="no-btn">Нет</button>
+            <button id="yes-btn">Да</button>
+        </div>
 
-<!-- Блок с колесом (скрыт по умолчанию) -->
-<div id="wheel-container" style="display: none; text-align: center; margin-top: 20px;">
-    <div class="wheel-wrapper">
-        <div class="arrow">▼</div>
-        <div class="wheel" id="wheel">
-            <div class="sector" style="--i:0"><span>1</span></div>
-            <div class="sector" style="--i:1"><span>2</span></div>
-            <div class="sector" style="--i:2"><span>3</span></div>
-            <div class="sector" style="--i:3"><span>4</span></div>
+        <!-- Кнопка "Далее" (скрыта) -->
+        <div id="next-stage" class="hidden">
+            <button id="next-btn" class="next-btn">Далее </button>
+        </div>
+
+        <!-- Колесо (скрыто) -->
+        <div id="wheel-container" class="hidden">
+            <div class="wheel-wrapper">
+                <div class="arrow">▼</div>
+                <div class="wheel" id="wheel">
+                    <div class="sector" style="--i:0"><span>1</span></div>
+                    <div class="sector" style="--i:1"><span>2</span></div>
+                    <div class="sector" style="--i:2"><span>3</span></div>
+                    <div class="sector" style="--i:3"><span>4</span></div>
+                </div>
+            </div>
+            <button id="spin-btn" class="spin-btn">Крутить! 🎡</button>
+            <div id="result" class="result"></div>
         </div>
     </div>
-    <button id="spin-btn" class="spin-btn">Крутить</button>
-    <div id="result" class="result"></div>
-</div>
-        </div>
-        <script src="script.js"></script>
-    </body>
+    <script src="script.js"></script>
+</body>
 </html>
