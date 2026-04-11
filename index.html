@@ -14,6 +14,25 @@
                 <button id="yes-btn">Нет</button>
                 <button id="no-btn">Да</button>
             </div>
+            <!-- После блока .buttons добавьте: -->
+<div id="next-stage" style="display: none; text-align: center;">
+    <button id="next-btn" class="next-btn">Далее</button>
+</div>
+
+<!-- Блок с колесом (скрыт по умолчанию) -->
+<div id="wheel-container" style="display: none; text-align: center; margin-top: 20px;">
+    <div class="wheel-wrapper">
+        <div class="arrow">▼</div>
+        <div class="wheel" id="wheel">
+            <div class="sector" style="--i:0"><span>1</span></div>
+            <div class="sector" style="--i:1"><span>2</span></div>
+            <div class="sector" style="--i:2"><span>3</span></div>
+            <div class="sector" style="--i:3"><span>4</span></div>
+        </div>
+    </div>
+    <button id="spin-btn" class="spin-btn">Крутить</button>
+    <div id="result" class="result"></div>
+</div>
         </div>
         <script src="script.js"></script>
     </body>
